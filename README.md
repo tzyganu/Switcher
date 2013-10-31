@@ -1,0 +1,4 @@
+Switcher
+========
+
+Configurable products switcher
