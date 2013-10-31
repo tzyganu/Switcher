@@ -68,7 +68,7 @@ To unsintall the extension remove the following files and folders
 
 Run these queries on your database (add table prefix if you have one):
 
- - `DELETE FROM core_config_data WHERE path LIKE '%easylife_switcher/'`  
+ - `DELETE FROM core_config_data WHERE path LIKE 'easylife_switcher/%'`
  - `DELETE FROM core_resource WHERE code = 'easylife_switcher_setup'`  
 
 The extension adds a new attribute to the configurable products. To identify it run this query (if you changed the attribute code before install change it in this query also):  
