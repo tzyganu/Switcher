@@ -1,0 +1,62 @@
+/**
+* Easylife_Switcher extension
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the MIT License
+* that is bundled with this package in the file LICENSE_EASYLIFE_SWITCHER.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/mit-license.php
+*
+* @category   	Easylife
+* @package	    Easylife_Switcher
+* @copyright    Copyright (c) 2013
+* @license	    http://opensource.org/licenses/mit-license.php MIT License
+*/
+/**
+ * extension css file
+ *
+ * @category    Easylife
+ * @package	    Easylife_Switcher
+ * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
+ */
+.product-options .switcher-field label {
+    border: 1px solid #E7E9EA;
+    border-radius: 2px 2px 2px 2px;
+    color: #696E72;
+    display: inline-block;
+    font-size: 10px;
+    height: 40px;
+    line-height: 40px;
+    margin: 0 10px 10px 0;
+    overflow: hidden;
+    padding: 0;
+    text-align: center;
+    width: auto;
+    min-width: 40px;
+    float:left;
+}
+.switcher-field label {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 5px;
+}
+.product-options .switcher-field label.selected {
+    border-color: #FF6600;
+    color: #FF6600;
+}
+.product-options .switcher-field label.no-stock {
+    background: url("../../images/easylife_switcher/no-stock.gif") repeat scroll 50% 50% rgba(0, 0, 0, 0);
+    color: #DADBDC;
+}
+.switcher-field label.no-stock {
+    color: #000000;
+    cursor: default;
+}
+.switcher-field label.no-stock.allow-select{
+    cursor:pointer;
+}
+.product-options .switcher-field label.no-stock img {
+    opacity: 0.3;
+    filter: alpha(opacity=30)
+}

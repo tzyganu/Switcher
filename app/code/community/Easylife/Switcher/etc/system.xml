@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Easylife_Switcher extension
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the MIT License
+* that is bundled with this package in the file LICENSE_EASYLIFE_SWITCHER.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/mit-license.php
+*
+* @category   	Easylife
+* @package	    Easylife_Switcher
+* @copyright   Copyright (c) 2013
+* @license	    http://opensource.org/licenses/mit-license.php MIT License
+*/
+-->
+<config>
+    <sections>
+        <easylife_switcher translate="label" module="easylife_switcher">
+            <label>Easylife Switcher</label>
+            <tab>catalog</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>400</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <settings translate="label" module="easylife_switcher">
+                    <label>Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label" module="easylife_switcher">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                        <transform_dropdowns translate="label">
+                            <label>Transform dropdowns to labels</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </transform_dropdowns>
+                        <out_of_stock translate="label">
+                            <label>Show out of stock configurations</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </out_of_stock>
+                        <allow_no_stock_select translate="label">
+                            <label>Allow out of stock products to be selected</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>35</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <out_of_stock>1</out_of_stock>
+                                <transform_dropdowns>1</transform_dropdowns>
+                            </depends>
+                        </allow_no_stock_select>
+                        <use_images translate="label">
+                            <label>Use simple product images instead of labels for attributes</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>easylife_switcher/adminhtml_system_config_source_attributes</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <transform_dropdowns>1</transform_dropdowns>
+                            </depends>
+                        </use_images>
+                        <image_attribute translate="label comment">
+                            <label>Use this image attribute</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>easylife_switcher/adminhtml_system_config_source_image_attributes</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <transform_dropdowns>1</transform_dropdowns>
+                            </depends>
+                            <comment>For these attributes the product image will be displayed if available instead of the dropdown label.</comment>
+                        </image_attribute>
+                        <change_images translate="label">
+                            <label>Switch product images</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>easylife_switcher/adminhtml_system_config_source_switch</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </change_images>
+                        <change_image_attribtues translate="label comment">
+                            <label>Change images when these attributes are changed</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>easylife_switcher/adminhtml_system_config_source_attributes</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>1</change_images>
+                            </depends>
+                            <comment>Changing the configurable value of these attributes will trigger the main image to change, if available.</comment>
+                        </change_image_attribtues>
+                        <image_selector translate="label comment">
+                            <label>Dom selector for main image</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>1</change_images>
+                            </depends>
+                            <comment>Prototype expression that selects the main image element</comment>
+                        </image_selector>
+                        <image_resize translate="label comment">
+                            <label>Main image size</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>82</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>1</change_images>
+                            </depends>
+                            <comment>Use values like 100x80 or simply 100. Leave empty for no resize</comment>
+                        </image_resize>
+                        <image_change_callback translate="title comment">
+                            <label>Js Callback after main image change</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>85</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>1</change_images>
+                            </depends>
+                            <comment>JS callback to be executed after the main image is changed.</comment>
+                        </image_change_callback>
+                        <change_media_attribtues translate="label comment">
+                            <label>Change media content when these attributes are changed</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>easylife_switcher/adminhtml_system_config_source_attributes</source_model>
+                            <sort_order>87</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>2</change_images>
+                            </depends>
+                            <comment>Changing the configurable value of these attributes will trigger the media block to change.</comment>
+                        </change_media_attribtues>
+                        <media_selector translate="label comment">
+                            <label>Dom Media block selector</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>2</change_images>
+                            </depends>
+                            <comment>Prototype expression that selects the media block container</comment>
+                        </media_selector>
+                        <media_change_callback translate="title comment">
+                            <label>Js Callback after media change</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>2</change_images>
+                            </depends>
+                            <comment>JS callback to be executed after the media block is changed.</comment>
+                        </media_change_callback>
+                        <media_block translate="title comment">
+                            <label>Media block alias</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>2</change_images>
+                            </depends>
+                            <comment>Block type for media section. Leave empty to use default</comment>
+                        </media_block>
+                        <media_template translate="title comment">
+                            <label>Media block template</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>2</change_images>
+                            </depends>
+                            <comment>Template for media block. Leave empty to use default.</comment>
+                        </media_template>
+                    </fields>
+                </settings>
+            </groups>
+        </easylife_switcher>
+    </sections>
+</config>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Easylife_Switcher>
+            <codePool>community</codePool>
+            <active>true</active>
+            <depends>
+                <Mage_Catalog />
+            </depends>
+        </Easylife_Switcher>
+    </modules>
+</config>

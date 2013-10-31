@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Easylife_Switcher extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MIT License
+ * that is bundled with this package in the file LICENSE_EASYLIFE_SWITCHER.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category   	Easylife
+ * @package	    Easylife_Switcher
+ * @copyright   Copyright (c) 2013
+ * @license	    http://opensource.org/licenses/mit-license.php MIT License
+ */
+/**
+ * add new block to configurable products view
+ *
+ * @category    Easylife
+ * @package	    Easylife_Switcher
+ * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
+ */
+ -->
+<layout>
+    <PRODUCT_TYPE_configurable>
+        <reference name="head">
+            <action method="addJs" ifconfig="easylife_switcher/settings/enabled">
+                <js>easylife_switcher/product.js</js>
+            </action>
+            <action method="addCss" ifconfig="easylife_switcher/settings/enabled">
+                <css>css/easylife_switcher/styles.css</css>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="easylife_switcher/catalog_product_view_type_configurable_config" template="easylife_switcher/catalog/product/view/type/configurable/config.phtml" />
+        </reference>
+    </PRODUCT_TYPE_configurable>
+</layout>

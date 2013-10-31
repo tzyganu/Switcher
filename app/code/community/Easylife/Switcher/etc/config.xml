@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Easylife_Switcher extension
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the MIT License
+* that is bundled with this package in the file LICENSE_EASYLIFE_SWITCHER.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/mit-license.php
+*
+* @category   	Easylife
+* @package	    Easylife_Switcher
+* @copyright   Copyright (c) 2013
+* @license	    http://opensource.org/licenses/mit-license.php MIT License
+*/
+-->
+<config>
+    <modules>
+        <Easylife_Switcher>
+            <version>0.0.1</version>
+        </Easylife_Switcher>
+    </modules>
+    <global>
+        <helpers>
+            <easylife_switcher>
+                <class>Easylife_Switcher_Helper</class>
+            </easylife_switcher>
+        </helpers>
+        <blocks>
+            <easylife_switcher>
+                <class>Easylife_Switcher_Block</class>
+            </easylife_switcher>
+        </blocks>
+        <models>
+            <easylife_switcher>
+                <class>Easylife_Switcher_Model</class>
+            </easylife_switcher>
+        </models>
+        <resources>
+            <easylife_switcher_setup>
+                <setup>
+                    <module>Easylife_Switcher</module>
+                    <class>Mage_Catalog_Model_Resource_Setup</class>
+                </setup>
+            </easylife_switcher_setup>
+        </resources>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <easylife_switcher>
+                    <file>easylife_switcher.xml</file>
+                </easylife_switcher>
+            </updates>
+        </layout>
+        <events>
+            <controller_action_layout_render_before_catalog_product_view>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/observer</class>
+                        <method>checkShowStock</method>
+                    </easylife_switcher>
+                </observers>
+            </controller_action_layout_render_before_catalog_product_view>
+            <controller_action_layout_render_before_checkout_cart_configure>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/observer</class>
+                        <method>checkShowStock</method>
+                    </easylife_switcher>
+                </observers>
+            </controller_action_layout_render_before_checkout_cart_configure>
+        </events>
+        <translate>
+            <modules>
+                <Easylife_Switcher>
+                    <files>
+                        <default>Easylife_Switcher.csv</default>
+                    </files>
+                </Easylife_Switcher>
+            </modules>
+        </translate>
+    </frontend>
+    <adminhtml>
+        <layout>
+            <updates>
+                <easylife_switcher>
+                    <file>easylife_switcher.xml</file>
+                </easylife_switcher>
+            </updates>
+        </layout>
+        <events>
+            <core_block_abstract_to_html_before>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/observer</class>
+                        <method>addDefaultColumn</method>
+                    </easylife_switcher>
+                </observers>
+            </core_block_abstract_to_html_before>
+        </events>
+        <translate>
+            <modules>
+                <Easylife_Switcher>
+                    <files>
+                        <default>Easylife_Switcher.csv</default>
+                    </files>
+                </Easylife_Switcher>
+            </modules>
+        </translate>
+    </adminhtml>
+    <default>
+        <easylife_switcher>
+            <settings>
+                <enabled>0</enabled>
+                <transform_dropdowns>1</transform_dropdowns>
+                <out_of_stock>1</out_of_stock>
+                <use_images>color</use_images>
+                <image_attribute>small_image</image_attribute>
+                <change_images>1</change_images>
+                <change_image_attribtues>color</change_image_attribtues>
+                <change_media_attribtues>color</change_media_attribtues>
+                <image_selector>$('image')</image_selector>
+                <image_change_callback>$('image').setStyle({width:'', height:''});$('image').up().addClassName('product-image-zoom');product_zoom = new Product.Zoom('image', 'track', 'handle', 'zoom_in', 'zoom_out', 'track_hint');</image_change_callback>
+                <media_selector>$$('.product-view .product-img-box')[0]</media_selector>
+                <media_change_callback>product_zoom = new Product.Zoom('image', 'track', 'handle', 'zoom_in', 'zoom_out', 'track_hint');</media_change_callback>
+                <allow_no_stock_select>1</allow_no_stock_select>
+            </settings>
+        </easylife_switcher>
+    </default>
+</config>

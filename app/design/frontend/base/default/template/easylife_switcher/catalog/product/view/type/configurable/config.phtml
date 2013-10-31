@@ -1,0 +1,36 @@
+<?php
+/**
+ * Easylife_Switcher extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MIT License
+ * that is bundled with this package in the file LICENSE_EASYLIFE_SWITCHER.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category   	Easylife
+ * @package	    Easylife_Switcher
+ * @copyright   Copyright (c) 2013
+ * @license	    http://opensource.org/licenses/mit-license.php MIT License
+ */
+/**
+ * override the spConfig variable
+ *
+ * @category    Easylife
+ * @package	    Easylife_Switcher
+ * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
+ */
+?>
+<?php if (Mage::helper('easylife_switcher')->isEnabled()) : ?>
+    <script type="text/javascript">
+    //<![CDATA[
+        var switcherConfig = <?php echo $this->getJsonAdditionalConfig() ?>;
+        document.observe('dom:loaded', function(){
+            if (spConfig){
+                spConfig = new Easylife.Switcher(Object.extend(spConfig.config, switcherConfig));
+            }
+        });
+    //]]>
+    </script>
+<?php endif;?>

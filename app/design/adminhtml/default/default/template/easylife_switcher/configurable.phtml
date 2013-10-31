@@ -1,0 +1,40 @@
+<?php
+/**
+ * Easylife_Switcher extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MIT License
+ * that is bundled with this package in the file LICENSE_EASYLIFE_SWITCHER.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category   	Easylife
+ * @package	    Easylife_Switcher
+ * @copyright   Copyright (c) 2013
+ * @license	    http://opensource.org/licenses/mit-license.php MIT License
+ */
+/**
+ * override the superProduct variable
+ *
+ * @category    Easylife
+ * @package	    Easylife_Switcher
+ * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
+ */
+?>
+<?php if (Mage::helper('easylife_switcher')->isEnabled()) : ?>
+<script type="text/javascript">
+//<![CDATA[
+    if (typeof superProduct != 'undefined'){
+        var createEmptyUrl = superProduct.createEmptyUrl;
+        var createNormalUrl = superProduct.createNormalUrl;
+        var createQuickUrl = superProduct.createQuickUrl;
+        var links = superProduct.links;
+
+        superProduct = new Easylife.Switcher(superProduct.attributes, '', superProduct.idPrefix, superProduct.grid, superProduct.readonly)
+        superProduct.links = links
+        superProduct.defaultConfigurationElement = '<?php echo Easylife_Switcher_Helper_Data::DEFAULT_CONFIGURATION_ATTRIBUTE_CODE?>';
+    }
+//]]>
+</script>
+<?php endif;?>
