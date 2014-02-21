@@ -1,7 +1,14 @@
 Easylife Switcher
 ========
 
-Configurable products switcher v0.0.1- Beta
+Configurable products switcher v0.1.0
+
+**Release Notes 0.1.0 - 2014-02-21**
+
+|Type|Issue|
+|----|-----|
+|Bug Fix|The extension disabled the creation of simple products from the configurable product admin page.|
+
 ----------
 
 This Magento extension affects the configurable products display.

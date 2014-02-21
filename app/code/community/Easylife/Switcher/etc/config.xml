@@ -114,7 +114,7 @@
     <default>
         <easylife_switcher>
             <settings>
-                <enabled>0</enabled>
+                <enabled>1</enabled>
                 <transform_dropdowns>1</transform_dropdowns>
                 <out_of_stock>1</out_of_stock>
                 <use_images>color</use_images>

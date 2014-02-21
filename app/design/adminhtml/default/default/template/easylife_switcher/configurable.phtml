@@ -34,6 +34,9 @@
         superProduct = new Easylife.Switcher(superProduct.attributes, '', superProduct.idPrefix, superProduct.grid, superProduct.readonly)
         superProduct.links = links
         superProduct.defaultConfigurationElement = '<?php echo Easylife_Switcher_Helper_Data::DEFAULT_CONFIGURATION_ATTRIBUTE_CODE?>';
+        superProduct.createEmptyUrl = createEmptyUrl;
+        superProduct.createNormalUrl = createNormalUrl;
+        superProduct.createQuickUrl = createQuickUrl;
     }
 //]]>
 </script>
