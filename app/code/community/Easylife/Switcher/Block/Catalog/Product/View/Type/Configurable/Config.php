@@ -32,6 +32,10 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      */
     const XML_USE_IMAGES_PATH       = 'easylife_switcher/settings/use_images';
     /**
+     * config path to use option images
+     */
+    const XML_USE_OPTION_IMAGES_PATH= 'easylife_switcher/settings/use_option_images';
+    /**
      * config path to image attributes
      */
     const XML_IMAGE_ATTRIBUTE_PATH  = 'easylife_switcher/settings/image_attribute';
@@ -51,6 +55,10 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      * config path to image resize
      */
     const XML_IMAGE_RESIZE          = 'easylife_switcher/settings/image_resize';
+    /**
+     * config path to labels / options image resize
+     */
+    const XML_OPTIONS_IMAGE_RESIZE          = 'easylife_switcher/settings/options_image_resize';
     /**
      * config pat to change image callback
      */
@@ -107,6 +115,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
         $config['stock']                    = $this->getStockOptions();
         $config['switch_attributes']        = $this->getSwitchAttributes();
         $config['images']                   = $this->getImages();
+        $config['option_images']            = $this->getOptionImages();
 
         if (!$this->getProduct()->hasPreconfiguredValues()){
             if ($this->getDefaultValues()){
@@ -175,7 +184,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      */
     public function getSwitchAttributes($path = self::XML_USE_IMAGES_PATH){
         if (!isset($this->_switchAttribtues[$path])){
-            $allowedString = Mage::getStoreConfig($path);
+            $allowedString = trim(Mage::getStoreConfig($path),' ,');
             if (!$allowedString){
                 $this->_switchAttribtues[$path] = array();
             }
@@ -193,6 +202,56 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
             }
         }
         return $this->_switchAttribtues[$path];
+    }
+
+
+   /**
+     * get attribute option images to use for labels
+     * @access public
+     * @return array
+     * @author Emil [carco] Sirbu <emil.sirbu@gmail.com>
+     */
+    public function getOptionImages(){
+    
+
+        $attributes = $this->getSwitchAttributes(self::XML_USE_OPTION_IMAGES_PATH);
+        if (!$attributes) {
+            return array();
+        }
+
+        $simpleProducts = $this->getSimpleProducts();
+        if(!$simpleProducts) {
+            return array();
+        }
+
+        $optIDs = array();
+        foreach ($simpleProducts as $product){
+            foreach($attributes as $attrId=>$attrCode) {
+                if($attrCode && $product->getData($attrCode)) {
+                    $optIDs[$product->getData($attrCode)] =  $attrId;
+                }
+            }
+        }
+        if(!$optIDs) {
+            return array();
+        }
+
+        $images = array();
+        $options = Mage::getModel('easylife_switcher/optimage')->getOptionCollection(array_keys($optIDs),$byOptIds = true);
+        foreach ($options as $option){
+            if($option->getOptimage()) {
+                $image = Mage::helper('easylife_switcher/optimage')->init($option,'optimage');
+                $dimensions = $this->_getImageDimensions(self::XML_OPTIONS_IMAGE_RESIZE);
+                if (!empty($dimensions)){
+                    $image->resize($dimensions[0], $dimensions[1]);
+                }
+                $images[$option->getAttributeId()][$option->getId()]['image_url'] = (string)$image;
+            } elseif($option->getHexaCode()) {
+                $images[$option->getAttributeId()][$option->getId()]['hexa_code'] = $option->getHexaCode();
+            }
+        }
+
+        return $images;
     }
 
     /**
@@ -217,7 +276,12 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
         foreach ($this->getSwitchAttributes() as $id=>$code){
             foreach ($simpleProducts as $product){
                 if ($product->getData($imageAttribute) != '' && $product->getData($imageAttribute) != 'no_selection'){
-                    $images[$id][$product->getId()] = (string)Mage::helper('catalog/image')->init($product, $this->getImageAttribute())->resize(40);
+                    $image = Mage::helper('catalog/image')->init($product, $this->getImageAttribute());
+                    $dimensions = $this->_getImageDimensions(self::XML_OPTIONS_IMAGE_RESIZE);
+                    if (!empty($dimensions)){
+                        $image->resize($dimensions[0], $dimensions[1]);
+                    }
+                    $images[$id][$product->getId()] = (string)$image;
                 }
             }
         }
@@ -349,14 +413,19 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      * @return array|bool
      * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    protected function _getImageDimensions(){
-        $value = Mage::getStoreConfig(self::XML_IMAGE_RESIZE);
+    protected function _getImageDimensions($path = self::XML_IMAGE_RESIZE){
+        $value = Mage::getStoreConfig($path);
         if (!$value){
             return false;
         }
         $dimensions = explode('x', $value, 2);
         if (!isset($dimensions[1])){
             $dimensions[1] = $dimensions[0];
+        }
+        $dimensions[0] = (int)$dimensions[0];
+        $dimensions[1] = (int)$dimensions[1];
+        if($dimensions[0]<=0 || $dimensions[1]<=0) {
+            return false;
         }
         return $dimensions;
     }
@@ -388,4 +457,5 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
         }
         return $template;
     }
+
 }

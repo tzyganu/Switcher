@@ -100,6 +100,47 @@
                     </easylife_switcher>
                 </observers>
             </core_block_abstract_to_html_before>
+            <!-- Save images associated with attribute options -->
+            <controller_action_postdispatch_adminhtml_catalog_product_attribute_save>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/optimage</class>
+                        <method>uploadAndSaveImages</method>
+                    </easylife_switcher>
+                </observers>
+            </controller_action_postdispatch_adminhtml_catalog_product_attribute_save>
+            <adminhtml_cache_flush_all>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/optimage</class>
+                        <method>cleanOptImages</method>
+                    </easylife_switcher>
+                </observers>
+            </adminhtml_cache_flush_all>
+            <adminhtml_cache_flush_system>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/optimage</class>
+                        <method>cleanOptImages</method>
+                    </easylife_switcher>
+                </observers>
+            </adminhtml_cache_flush_system>
+            <clean_media_cache_after>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/optimage</class>
+                        <method>cleanOptImages</method>
+                    </easylife_switcher>
+                </observers>
+            </clean_media_cache_after>
+            <clean_catalog_images_cache_after>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/optimage</class>
+                        <method>cleanOptImages</method>
+                    </easylife_switcher>
+                </observers>
+            </clean_catalog_images_cache_after>
         </events>
         <translate>
             <modules>
@@ -115,10 +156,12 @@
         <easylife_switcher>
             <settings>
                 <enabled>1</enabled>
-                <transform_dropdowns>1</transform_dropdowns>
+                <transform_dropdowns>1</transform_dropdowns><!-- Transform option dropdown into labels -->
                 <out_of_stock>1</out_of_stock>
-                <use_images>color</use_images>
+                <use_images>color</use_images><!-- Use product child images as label -->
+                <use_option_images>color</use_option_images><!-- Use attribute option images as label -->
                 <image_attribute>small_image</image_attribute>
+                <options_image_resize>40</options_image_resize>
                 <change_images>1</change_images>
                 <change_image_attribtues>color</change_image_attribtues>
                 <change_media_attribtues>color</change_media_attribtues>
@@ -127,6 +170,7 @@
                 <media_selector>$$('.product-view .product-img-box')[0]</media_selector>
                 <media_change_callback>product_zoom = new Product.Zoom('image', 'track', 'handle', 'zoom_in', 'zoom_out', 'track_hint');</media_change_callback>
                 <allow_no_stock_select>1</allow_no_stock_select>
+                <image_resize></image_resize>
             </settings>
         </easylife_switcher>
     </default>

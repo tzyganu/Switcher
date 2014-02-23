@@ -34,4 +34,11 @@
             <block type="adminhtml/template" template="easylife_switcher/configurable.phtml" name="configurable_default" as="configurable_default"/>
         </reference>
     </adminhtml_catalog_product_edit>
+    <!-- Add Attribute option images tab -->
+    <adminhtml_catalog_product_attribute_edit>
+        <reference name="attribute_edit_tabs">
+            <block type="easylife_switcher/adminhtml_catalog_product_attribute_edit_tab_optimage" name="tab_optimage" template="easylife_switcher/optimage.phtml" />
+            <action method="addTabAfter"><name>opt_images</name><block>tab_optimage</block><after>labels</after></action>
+        </reference>
+    </adminhtml_catalog_product_attribute_edit>
 </layout>
