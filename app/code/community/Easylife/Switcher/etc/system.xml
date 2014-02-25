@@ -82,6 +82,20 @@
                                 <transform_dropdowns>1</transform_dropdowns>
                             </depends>
                         </allow_no_stock_select>
+                        <use_option_images translate="label">
+                            <label>Use option image or hexa code instead of label for attributes</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>easylife_switcher/adminhtml_system_config_source_attributes</source_model>
+                            <sort_order>37</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <transform_dropdowns>1</transform_dropdowns>
+                            </depends>
+                             <comment>Images/Hexa codes cand be defined on attribute section</comment>
+                        </use_option_images> 
                         <use_images translate="label">
                             <label>Use simple product images instead of labels for attributes</label>
                             <frontend_type>multiselect</frontend_type>
@@ -109,6 +123,19 @@
                             </depends>
                             <comment>For these attributes the product image will be displayed if available instead of the dropdown label.</comment>
                         </image_attribute>
+                        <options_image_resize translate="label comment">
+                            <label>Label / Options image size</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>1</change_images>
+                            </depends>
+                            <comment>Use values like 100x80 or simply 100. Leave empty for no resize</comment>
+                        </options_image_resize>
                         <change_images translate="label">
                             <label>Switch product images</label>
                             <frontend_type>select</frontend_type>

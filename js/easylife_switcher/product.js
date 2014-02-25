@@ -98,7 +98,6 @@ Easylife.Switcher = Class.create(Product.Config, {
     transformDropdown: function(selectid){
         var that = this;
         var attributeId = $(selectid).id.replace(/[a-z]*/, '');
-        var selectname = $(selectid).name;
         var newId = $(selectid).id +'_switchers';
         //remove previous labels
         if ($(newId)){
@@ -111,7 +110,7 @@ Easylife.Switcher = Class.create(Product.Config, {
             position: "absolute"
         });
         //create a container
-        $(selectid).insert({after: '<div class="switcher-field" id="' + newId + '"></div>'});
+        $(selectid).insert({after: '<div class="switcher-field switcher-'+that.config.attributes[attributeId]['code']+'" id="' + newId + '"></div>'});
         //create a label for each element
         $(selectid).childElements().each(function(elem, index){
             //skip first element "Choose..."
@@ -121,15 +120,21 @@ Easylife.Switcher = Class.create(Product.Config, {
             var optval = $(elem).value;
             if (optval != ''){
                 var opttext = $(elem).innerHTML;
-                if (typeof that.config.images[attributeId] != 'undefined'){
+                if (typeof that.config.images[attributeId] != 'undefined' || typeof that.config.option_images[attributeId] != 'undefined'){
                     for ( var j=0; j<that.config.attributes[attributeId].options.length;j++){
                         if (that.config.attributes[attributeId].options[j].id != optval){
                             continue;
                         }
                         var product = parseInt(that.config.attributes[attributeId].options[j].allowedProducts[0]);
-                        //replace label with image if available
-                        if (typeof that.config.images[attributeId][product] != 'undefined'){
-                            opttext = '<img src="' + that.config.images[attributeId][product] + '" alt="' + opttext + '" title="' + opttext + '" />';
+                        var replaced = false;
+                        if (typeof that.config.images[attributeId] != 'undefined' && typeof that.config.images[attributeId][product] != 'undefined') {
+                             opttext = '<img src="' + that.config.images[attributeId][product] + '" alt="' + opttext + '" title="' + opttext + '" />';
+                        } else if (typeof that.config.option_images[attributeId] != 'undefined' && typeof that.config.option_images[attributeId][optval] != 'undefined') {
+                            if(typeof that.config.option_images[attributeId][optval]['image_url'] != 'undefined') {
+                                opttext = '<img src="' + that.config.option_images[attributeId][optval]['image_url'] + '" alt="' + opttext + '" title="' + opttext + '" />';
+                            } else if( typeof that.config.option_images[attributeId][optval]['hexa_code'] != 'undefined') {
+                                opttext = '<span class="switcher-hexacode" title="' + opttext + '" style="background-color:' + that.config.option_images[attributeId][optval]['hexa_code']+'"></span>';
+                            } 
                         }
                     }
                 }
@@ -145,7 +150,7 @@ Easylife.Switcher = Class.create(Product.Config, {
                         labelClass += ' allow-select';
                     }
                 }
-                $(newId).insert('<label class="switcher-label' + labelClass + '" id="' + $(selectid).id + '_' + optval + '" value="' + optval + '">'+opttext+'</label></div>')
+                $(newId).insert('<label class="switcher-label' + labelClass + '" id="' + $(selectid).id + '_' + optval + '" value="' + optval + '"><span>'+opttext+'</span></label></div>')
                 //change the select value on click
                 if (inStock || that.config.allow_no_stock_select){
                     Event.observe($($(selectid).id + '_' + optval), 'click', function() {
