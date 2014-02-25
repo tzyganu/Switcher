@@ -129,7 +129,7 @@ Easylife.Switcher = Class.create(Product.Config, {
                         var replaced = false;
                         if (typeof that.config.images[attributeId] != 'undefined' && typeof that.config.images[attributeId][product] != 'undefined') {
                              opttext = '<img src="' + that.config.images[attributeId][product] + '" alt="' + opttext + '" title="' + opttext + '" />';
-                        } else if (typeof that.config.option_images[attributeId] != 'undefined' && that.config.option_images[attributeId][optval] != 'undefined') {
+                        } else if (typeof that.config.option_images[attributeId] != 'undefined' && typeof that.config.option_images[attributeId][optval] != 'undefined') {
                             if(typeof that.config.option_images[attributeId][optval]['image_url'] != 'undefined') {
                                 opttext = '<img src="' + that.config.option_images[attributeId][optval]['image_url'] + '" alt="' + opttext + '" title="' + opttext + '" />';
                             } else if( typeof that.config.option_images[attributeId][optval]['hexa_code'] != 'undefined') {
