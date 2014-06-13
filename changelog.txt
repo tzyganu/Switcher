@@ -1,0 +1,7 @@
+thschwz, 13-6-2014, Configurable choice to show added price or not
+
+files changed:
+js\easylife_switcher\product.js
+app\code\community\Easylife\Switcher\etc\system.xml
+app\code\community\Easylife\Switcher\etc\config.xml
+app\code\community\Easylife\Switcher\Block\Catalog\Product\View\Type\Configurable\Config.php

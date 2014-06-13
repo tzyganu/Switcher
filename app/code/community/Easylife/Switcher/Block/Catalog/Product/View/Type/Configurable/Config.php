@@ -28,6 +28,10 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      */
     const XML_TRANSFORM_PATH        = 'easylife_switcher/settings/transform_dropdowns';
     /**
+     * config path to transform dropdowns
+     */
+    const XML_ADDED_PRICES_PATH        = 'easylife_switcher/settings/show_added_prices';
+    /**
      * config path to use images
      */
     const XML_USE_IMAGES_PATH       = 'easylife_switcher/settings/use_images';
@@ -104,6 +108,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
         if (Mage::helper('easylife_switcher')->isEnabled()){
             $config['transform_dropdowns']  = Mage::getStoreConfigFlag(self::XML_TRANSFORM_PATH);
         }
+		$config['show_added_prices']        = Mage::getStoreConfigFlag(self::XML_ADDED_PRICES_PATH);
         $config['stock']                    = $this->getStockOptions();
         $config['switch_attributes']        = $this->getSwitchAttributes();
         $config['images']                   = $this->getImages();
@@ -121,7 +126,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
         $config['switch_media_selector']    = Mage::getStoreConfig(self::XML_MEDIA_SELECTOR);
         $config['switch_media_callback']    = Mage::getStoreConfig(self::XML_MEDIA_CALLBACK_PATH);
         $config['allow_no_stock_select']    = Mage::getStoreConfigFlag(self::XML_NO_STOCK_SELECT_PATH);
-
+        $config['currency_symbol']          = Mage::app()->getLocale()->currency( $currency_code )->getSymbol();
         return Mage::helper('core')->jsonEncode($config);
     }
 

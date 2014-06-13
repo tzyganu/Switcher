@@ -145,6 +145,12 @@ Easylife.Switcher = Class.create(Product.Config, {
                         labelClass += ' allow-select';
                     }
                 }
+				//If configured, remove added price in option value 
+                if (that.config.show_added_prices == 0) {
+					if (opttext.indexOf(that.config.currency_symbol) > 0) {
+					    opttext = opttext.substring(0, opttext.indexOf(that.config.currency_symbol)-2);
+				    }
+				}
                 $(newId).insert('<label class="switcher-label' + labelClass + '" id="' + $(selectid).id + '_' + optval + '" value="' + optval + '">'+opttext+'</label></div>')
                 //change the select value on click
                 if (inStock || that.config.allow_no_stock_select){
