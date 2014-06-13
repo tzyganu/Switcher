@@ -28,6 +28,10 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      */
     const XML_TRANSFORM_PATH        = 'easylife_switcher/settings/transform_dropdowns';
     /**
+     * config path to transform dropdowns
+    */
+    const XML_ADDED_PRICES_PATH        = 'easylife_switcher/settings/show_added_prices';
+    /**
      * config path to use images
      */
     const XML_USE_IMAGES_PATH       = 'easylife_switcher/settings/use_images';
@@ -103,6 +107,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
         $config = array();
         if (Mage::helper('easylife_switcher')->isEnabled()){
             $config['transform_dropdowns']  = Mage::getStoreConfigFlag(self::XML_TRANSFORM_PATH);
+            $config['show_added_prices']    = Mage::getStoreConfigFlag(self::XML_ADDED_PRICES_PATH);
         }
         $config['stock']                    = $this->getStockOptions();
         $config['switch_attributes']        = $this->getSwitchAttributes();

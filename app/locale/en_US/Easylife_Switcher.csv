@@ -17,6 +17,7 @@ Enabled,Enabled
 "Prototype expression that selects the main image element","Prototype expression that selects the main image element"
 "Prototype expression that selects the media block container","Prototype expression that selects the media block container"
 Settings,Settings
+"Show added configurable prices in label","Show added configurable prices in label"
 "Show out of stock configurations","Show out of stock configurations"
 "Switch all media section","Switch all media section"
 "Switch main image","Switch main image"

@@ -1,7 +1,15 @@
 Easylife Switcher
 ========
 
-Configurable products switcher v0.1.0
+Configurable products switcher v1.0.0
+
+**Release Notes 1.0.0 - 2014-06-13**
+
+|Type|Issue|
+|----|-----|
+|Bug Fix|A default configuration could  not be set when creating a configurable product. Only on edit|
+|Feature|You can no choose from the configuration panel to show or not the price difference in the labels for configurable attributes. Thanks @thschwz for the idea and the help.|
+
 
 **Release Notes 0.1.0 - 2014-02-21**
 
@@ -42,6 +50,7 @@ Configuration:
 ------------
  - **Enabled**: This can enable or disable the extension.
  - **Transform dropdowns to labels**: If set to `Yes` then in the frontend the default dropdowns for the configurable products will be replaced by labels.
+ - **Show added configurable prices in label**: If you set this to `No`, you will not get in the labels or the dropdowns with the configurable attributes the price difference for the different combinations.
  - **Show out of stock configurations**: If set to `Yes` then you will see in the configurable product page the out of stock simple product combinations. By default this is disabled in Magento.
  - **Allow out of stock products to be selected**: If this is set to `Yes` then the customer will be able to click on the labels for the out of stock combinations and select them. He will still get an error when trying to add it to the cart. If it is set to `No` the labels for out of stock combinations will be disabled.
  - **Use simple product images instead of labels for attributes**: This allows you to select the attributes that will have images instead of labels. (useful if you have different color combinations). If the simple product does not have an image available then the label with the attribute value will be displayed. (see the first image for the "color" attribute).

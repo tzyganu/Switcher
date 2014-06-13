@@ -195,7 +195,7 @@ Easylife.Switcher = Class.create(Product.Config, {
     },
     /**
      * check if a combination is in stock
-     * @param attributeid
+     * @param attributeId
      * @param value
      * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
@@ -307,5 +307,11 @@ Easylife.Switcher = Class.create(Product.Config, {
         this.fullLoad = false;
         $super();
         this.fullLoad = true;
+    },
+    getOptionLabel : function($super, option, price) {
+        if (this.config.show_added_prices) {
+            return $super(option, price);
+        }
+        return option.label;
     }
 });

@@ -24,7 +24,7 @@
  */
  -->
 <layout>
-    <adminhtml_catalog_product_edit>
+    <easylife_switcher_handle>
         <reference name="head">
             <action method="addJs" ifconfig="easylife_switcher/settings/enabled">
                 <js>easylife_switcher/adminhtml/configurable.js</js>
@@ -33,5 +33,11 @@
         <reference name="content">
             <block type="adminhtml/template" template="easylife_switcher/configurable.phtml" name="configurable_default" as="configurable_default"/>
         </reference>
+    </easylife_switcher_handle>
+    <adminhtml_catalog_product_edit>
+        <update handle="easylife_switcher_handle" />
     </adminhtml_catalog_product_edit>
+    <adminhtml_catalog_product_new>
+        <update handle="easylife_switcher_handle" />
+    </adminhtml_catalog_product_new>
 </layout>

@@ -116,6 +116,7 @@
             <settings>
                 <enabled>1</enabled>
                 <transform_dropdowns>1</transform_dropdowns>
+                <show_added_prices>1</show_added_prices>
                 <out_of_stock>1</out_of_stock>
                 <use_images>color</use_images>
                 <image_attribute>small_image</image_attribute>
