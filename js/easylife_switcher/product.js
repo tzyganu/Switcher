@@ -174,6 +174,19 @@ Easylife.Switcher = Class.create(Product.Config, {
             $(elem).addClassName('selected');
             this.simulateSelect(selectid, $(elem).readAttribute('value'));
         }
+        $$('.additional-stock-message').each(function(elem) {
+            $(elem).remove();
+        });
+        var select = $(selectid),
+            selected = select.selectedIndex >= 0 ? select.options[select.selectedIndex] : undefined;
+        if (selected.config) {
+            for (var i = 0; i < selected.config.allowedProducts; i++) {
+                var stock = this.config.stock[selected.config.allowedProducts[i]];
+                if (stock && stock.message) {
+                    $('product-options-wrapper').insert({after: stock.message});
+                }
+            }
+        }
     },
     /**
      * simulate onchange event on select
@@ -207,7 +220,7 @@ Easylife.Switcher = Class.create(Product.Config, {
             }
             for (var i = 0; i<that.config.attributes[attributeId].options[j].allowedProducts.length;i++){
                 var product = that.config.attributes[attributeId].options[j].allowedProducts[i];
-                if (this.config.stock[product] == 1){
+                if (this.config.stock[product].is_salable == 1){
                     return 1;
                 }
             }
