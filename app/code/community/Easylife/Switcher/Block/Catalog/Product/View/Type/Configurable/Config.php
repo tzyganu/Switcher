@@ -142,7 +142,25 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
         $stock = array();
         foreach ($simpleProducts as $product) {
             $productId  = $product->getId();
-            $stock[$productId] = $product->getIsSalable();
+            $isSalable = $product->getIsSalable();
+            $stock[$productId] = array(
+                'is_salable' => $isSalable
+            );
+            if (!$isSalable) {
+                $message = '<div class="additional-stock-message"><p>';
+                $message .= $this->__('This product is out of stock');
+                if (Mage::getStoreConfig('catalog/productalert/allow_stock')) {
+                    $message .= '</p><p><a href="' . $this->getUrl('productalert/add/stock', array(
+                        '_query' => array(
+                            'product_id' => $product->getId()
+                        )
+                    )) . '">';
+                    $message .= $this->__('Alert me when this product is back in stock.');
+                    $message .= '</a>';
+                }
+                $message .= '</p></div>';
+                $stock[$productId]['message'] = $message;
+            }
         }
         return $stock;
     }
