@@ -1,7 +1,15 @@
 Easylife Switcher
 ========
 
-Configurable products switcher v1.0.0
+Configurable products switcher v1.0.1
+
+**Release Notes 1.0.1 - 2014-07-28**
+
+|Type|Issue|Comment|
+|----|-----|-----|
+|Improvement|You can now show out-of-stock combinations and keep the selects, the out of stock combination options are greyed out and cannot be selected|<a href="https://github.com/tzyganu/Switcher/issues/8" target="_blank">#8</a>|
+|Improvement|You can now decide if the first option is selected my default if one is not specified|<a href="https://github.com/tzyganu/Switcher/issues/24" target="_blank">#24</a> - not a full implementation but it will do for now|
+|Improvement|Out of the box support for CE-1.9|<a href="https://github.com/tzyganu/Switcher/issues/21" _target="blank">#21</a> - when installing on CE-1.9 some config values are changed|
 
 **Release Notes 1.0.0 - 2014-06-13**
 

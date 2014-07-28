@@ -45,20 +45,22 @@ Easylife.Switcher = Class.create(Product.Config, {
                     }
                 }
             }
-            var count = 0;
-            if (typeof config.defaultValues != 'undefined'){
-                for (var k in config.defaultValues) {
-                    if (config.defaultValues.hasOwnProperty(k)) {
-                        ++count;
+            if (config.autoselect_first) {
+                var count = 0;
+                if (typeof config.defaultValues != 'undefined'){
+                    for (var k in config.defaultValues) {
+                        if (config.defaultValues.hasOwnProperty(k)) {
+                            ++count;
+                        }
                     }
                 }
-            }
-            if (count == 0){
-                config.defaultValues = {};
-                for (var attribute in config.attributes){
-                    if (config.attributes.hasOwnProperty(attribute)){
-                        var option = config.attributes[attribute].options[0].id;
-                        config.defaultValues[attribute] = option;
+                if (count == 0){
+                    config.defaultValues = {};
+                    for (var attribute in config.attributes){
+                        if (config.attributes.hasOwnProperty(attribute)){
+                            var option = config.attributes[attribute].options[0].id;
+                            config.defaultValues[attribute] = option;
+                        }
                     }
                 }
             }
@@ -80,6 +82,24 @@ Easylife.Switcher = Class.create(Product.Config, {
         if (this.config.transform_dropdowns){
             this.transformDropdown(element);
         }
+        else {
+            if (!this.config.allow_no_stock_select) {
+                var attributeId = element.id.replace(/[a-z]*/, '');
+                var options = this.getAttributeOptions(attributeId);
+                for (var i in options) {
+                    if (options.hasOwnProperty(i)){
+                        var optval = options[i].id;
+                        var inStock = this.isInStock(attributeId, optval)
+                        $(element).select('option').each (function(elem){
+                            if ($(elem).value == optval && !inStock) {
+                                $(elem).disabled="disabled";
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
     },
     /**
      * transform dropdowns to labels
@@ -105,7 +125,7 @@ Easylife.Switcher = Class.create(Product.Config, {
             $(newId).remove();
         }
         //hide the select
-        //actually move it outside hte visible area so the validation will still work
+        //actually move it outside the visible area so the validation will still work
         $(selectid).setStyle({
             left:"-10000px",
             position: "absolute"

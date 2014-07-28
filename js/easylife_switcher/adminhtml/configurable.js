@@ -34,6 +34,7 @@ Easylife.Switcher = Class.create(Product.Configurable, {
      * @param idPrefix
      * @param grid
      * @param readonly
+     * @param defaultConfigurationElement
      * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     initialize: function($super, attributes, links, idPrefix, grid, readonly, defaultConfigurationElement){

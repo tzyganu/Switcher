@@ -28,6 +28,10 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      */
     const XML_TRANSFORM_PATH        = 'easylife_switcher/settings/transform_dropdowns';
     /**
+     * config path to autoselect first option if none specified
+     */
+    const XML_AUTOSELECT_FIRST_PATH = 'easylife_switcher/settings/autoselect_first';
+    /**
      * config path to transform dropdowns
     */
     const XML_ADDED_PRICES_PATH        = 'easylife_switcher/settings/show_added_prices';
@@ -126,6 +130,8 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
         $config['switch_media_selector']    = Mage::getStoreConfig(self::XML_MEDIA_SELECTOR);
         $config['switch_media_callback']    = Mage::getStoreConfig(self::XML_MEDIA_CALLBACK_PATH);
         $config['allow_no_stock_select']    = Mage::getStoreConfigFlag(self::XML_NO_STOCK_SELECT_PATH);
+
+        $config['autoselect_first']         = Mage::getStoreConfigFlag(self::XML_TRANSFORM_PATH) && Mage::getStoreConfigFlag(self::XML_AUTOSELECT_FIRST_PATH);
 
         return Mage::helper('core')->jsonEncode($config);
     }

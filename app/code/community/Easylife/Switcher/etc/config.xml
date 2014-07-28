@@ -19,7 +19,7 @@
 <config>
     <modules>
         <Easylife_Switcher>
-            <version>0.0.1</version>
+            <version>1.0.1</version>
         </Easylife_Switcher>
     </modules>
     <global>
@@ -116,6 +116,7 @@
             <settings>
                 <enabled>1</enabled>
                 <transform_dropdowns>1</transform_dropdowns>
+                <autoselect_first>1</autoselect_first>
                 <show_added_prices>1</show_added_prices>
                 <out_of_stock>1</out_of_stock>
                 <use_images>color</use_images>

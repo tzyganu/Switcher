@@ -1,4 +1,5 @@
 "Allow out of stock products to be selected","Allow out of stock products to be selected"
+"Autoselect first option if none specified","Autoselect first option if none specified"
 "Block type for media section. Leave empty to use default","Block type for media section. Leave empty to use default"
 "Change images when these attributes are changed","Change images when these attributes are changed"
 "Change media content when these attributes are changed","Change media content when these attributes are changed"
@@ -16,6 +17,7 @@ Enabled,Enabled
 "No image switch","No image switch"
 "Prototype expression that selects the main image element","Prototype expression that selects the main image element"
 "Prototype expression that selects the media block container","Prototype expression that selects the media block container"
+"Recommended if you have 2 or more configurable attributes.","Recommended if you have 2 or more configurable attributes."
 Settings,Settings
 "Show added configurable prices in label","Show added configurable prices in label"
 "Show out of stock configurations","Show out of stock configurations"
