@@ -1,7 +1,13 @@
 Easylife Switcher
 ========
 
-Configurable products switcher v1.0.1
+Configurable products switcher v1.0.2
+
+**Release Notes 1.0.2 - 2014-09-01**
+
+|Type|Issue|Comment|
+|----|-----|-----|
+|Bug Fix|When you select to show out of stock combinations, it affects the independent simple out of stock products. They are shown in stock.|<a href="https://github.com/tzyganu/Switcher/issues/32" target="_blank">#32</a>|
 
 **Release Notes 1.0.1 - 2014-07-28**
 

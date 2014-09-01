@@ -19,7 +19,7 @@
 <config>
     <modules>
         <Easylife_Switcher>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </Easylife_Switcher>
     </modules>
     <global>
@@ -56,19 +56,19 @@
             </updates>
         </layout>
         <events>
-            <controller_action_layout_render_before_catalog_product_view>
+            <catalog_controller_product_init>
                 <observers>
                     <easylife_switcher>
                         <class>easylife_switcher/observer</class>
                         <method>checkShowStock</method>
                     </easylife_switcher>
                 </observers>
-            </controller_action_layout_render_before_catalog_product_view>
+            </catalog_controller_product_init>
             <controller_action_layout_render_before_checkout_cart_configure>
                 <observers>
                     <easylife_switcher>
                         <class>easylife_switcher/observer</class>
-                        <method>checkShowStock</method>
+                        <method>checkShowStockOnConfigure</method>
                     </easylife_switcher>
                 </observers>
             </controller_action_layout_render_before_checkout_cart_configure>

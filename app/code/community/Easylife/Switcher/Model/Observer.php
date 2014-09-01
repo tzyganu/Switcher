@@ -30,11 +30,29 @@ class Easylife_Switcher_Model_Observer{
     /**
      * tell Magento to load out of stock products also
      * @access public
-     * @param $observer
+     * @param Varien_Event_Observer $observer
      * @return Easylife_Switcher_Model_Observer
      * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function checkShowStock($observer){
+    public function checkShowStock(Varien_Event_Observer $observer){
+        if (Mage::helper('easylife_switcher')->isEnabled()){
+            /** @var Mage_Catalog_Model_Product $product */
+            $product = $observer->getEvent()->getProduct();
+            if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE) {
+                Mage::helper('catalog/product')->setSkipSaleableCheck(Mage::getStoreConfigFlag(self::XML_SHOW_OUT_OF_STOCK_PATH));
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * tell Magento to load out of stock products also on cart configure page
+     * @access public
+     * @param Varien_Event_Observer $observer
+     * @return Easylife_Switcher_Model_Observer
+     * @author Marius Strajeru <marius.strajeru@gmail.com>
+     */
+    public function checkShowStockOnConfigure(Varien_Event_Observer $observer) {
         if (Mage::helper('easylife_switcher')->isEnabled()){
             Mage::helper('catalog/product')->setSkipSaleableCheck(Mage::getStoreConfigFlag(self::XML_SHOW_OUT_OF_STOCK_PATH));
         }
@@ -44,11 +62,11 @@ class Easylife_Switcher_Model_Observer{
     /**
      * add column to simple products grid
      * @access public
-     * @param $observer
+     * @param Varien_Event_Observer $observer
      * @return Easylife_Switcher_Model_Observer
      * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function addDefaultColumn($observer){
+    public function addDefaultColumn(Varien_Event_Observer $observer){
         $block = $observer->getEvent()->getBlock();
         if ($block instanceof Mage_Adminhtml_Block_Catalog_Product_Edit_Tab_Super_Config_Grid){
             if (Mage::helper('easylife_switcher')->isEnabled()){
