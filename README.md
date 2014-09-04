@@ -46,7 +46,7 @@ What it does
 Frontend:  
 
  - it can change the configurable products dropdowns to text or image labels <br />  <img src="http://i.imgur.com/FdHVLAu.png" alt="config" />  
- - it allows you do display the out od stock combinations of configurable products with a "not available" overlay (see image above - medium size). The out of stock products may be selectable or not. Your choice.  
+ - it allows you do display the out of stock combinations of configurable products with a "not available" overlay (see image above - medium size). The out of stock products may be selectable or not. Your choice.  
  - it can change the main image in the product page when a combination is selected, if an image is available for the simple product. You can set the attributes that change the image.  
  - it can change the full media block in the product page when a combination is selected, if at least the main image is available for the simple product. You can set the attributes that change the media section.  
 
