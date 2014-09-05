@@ -1,0 +1,10 @@
+{
+  "name": "tzyganu/Switcher",
+  "licence": "mit",
+  "type": "magento-module",
+  "description": "color swatch",
+  "require": {
+    "magento-hackathon/magento-composer-installer": "*"
+  } 
+}
+
