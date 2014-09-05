@@ -31,7 +31,7 @@ if (version_compare(Mage::getVersion(), $checkVersion, '>=')) {
 ProductMediaManager.createZoom(jQuery(\'#image-main\'));',
         'easylife_switcher/settings/image_selector' => '$(\'image-main\')',
         'easylife_switcher/settings/media_change_callback' => 'ProductMediaManager.destroyZoom();
-ProductMediaManager.createZoom(jQuery(\'#image-main\'));',
+ProductMediaManager.createZoom(jQuery(\'#image-main\'));ProductMediaManager.init();',
         'easylife_switcher/settings/media_selector' => '$$(\'.product-view .product-img-box\')[0]',
     );
     foreach ($configSettings as $path=>$value) {
