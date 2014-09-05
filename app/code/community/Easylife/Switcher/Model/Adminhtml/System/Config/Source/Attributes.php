@@ -34,13 +34,20 @@ class Easylife_Switcher_Model_Adminhtml_System_Config_Source_Attributes{
      * @return mixed|null
      * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function toOptionArray($withEmpty = false){
+    public function toOptionArray($withEmpty = true){
         if (is_null($this->_options)){
             $collection = Mage::getResourceModel('catalog/product_attribute_collection')
                 ->addVisibleFilter()
                 ->addFieldToFilter('is_configurable', 1)
                 ->addFieldToFilter('frontend_input', 'select')
             ;
+            $this->_options = array();
+            if($withEmpty) {
+                $this->_options[] = array(
+                    'label'=>Mage::helper('easylife_switcher')->__('[none]'),
+                    'value'=>''
+                );
+            }
             foreach ($collection as $attribute){
                 if (Mage::getSingleton('catalog/product_type_configurable')->canUseAttribute($attribute)){
                     $this->_options[] = array(

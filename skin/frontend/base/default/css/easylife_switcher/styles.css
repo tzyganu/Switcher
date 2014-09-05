@@ -60,3 +60,9 @@
     opacity: 0.3;
     filter: alpha(opacity=30)
 }
+.switcher-field .switcher-hexacode {
+    display: inline-block;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
+}

@@ -1,0 +1,55 @@
+
+<div class="entity-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend">
+            <?php echo $this->__('Options Images') ?>
+        </h4>
+    </div>
+    <div class="box">
+        <div class="notice-msg" style="padding-left: 50px; padding-top: 8px; margin-bottom: 14px;">
+            <?php echo $this->__('Save any other attribute changes (if any) before set images'); ?><br />
+            <?php echo $this->__('Use png, gif, jpg, jpeg images'); ?><br />
+        </div>
+        <div class="hor-scroll">
+            <table cellpadding="10" cellspacing="10">
+                <tr>
+                    <th width="200"><?php echo $this->__('Label') ?></th>
+                    <th><?php echo $this->__('Hash code') ?></th>
+                    <th><?php echo $this->__('Image') ?></th>
+                    <th><?php echo $this->__('Preview') ?></th>
+                    <th><?php echo $this->__('Delete') ?></th>
+                </tr>
+                
+                <?php foreach ($this->getOptionsCollection() as $option): $id=$option->getId();$image = $option->getOptimage();$hexaCode = $option->getHexaCode(); ?>
+                <tr>
+                    <td style="vertical-align: middle;">
+                         <?php echo $option->getData('value'); ?>
+                    </td>
+                    <td style="vertical-align: middle;"><input class="input-text" value="<?php echo $hexaCode;?>" type="text" name="hashcode[<?php echo $id;?>]"></td>
+                    <td style="vertical-align: middle;"><input type="file" name="image_<?php echo $id;?>"></td>
+
+                    <td style="vertical-align: middle;" align="center">
+                        <div style="text-align:center;width:40px;height:40px;overflow:hidden;border:1px solid #fff;">
+                        <?php if ($image): ?>
+                            <img src="<?php echo Mage::helper('easylife_switcher/optimage')->init($option,'optimage')->resize(40) ?>" alt="<?php echo $this->htmlEscape($image);?>" title="<?php echo $this->htmlEscape($image);?>"  />
+                        <?php else: ?>
+                            <span style="display:inline-block;line-height:40px;<?php if($hexaCode) echo 'background-color:'.$hexaCode;?>"><?php echo $hexaCode?$hexaCode:$this->__('[none]');?></span>
+                        <?php endif; ?>
+                        </div>
+                    </td>
+                    <td style="vertical-align: middle;" align="center"><input type="checkbox" <?php if (!$image) echo "disabled"?> value="1" name="delete[<?php echo $id; ?>]"></td>
+                </tr>
+                <?php endforeach; ?>
+                
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    document.observe('dom:loaded', function(){
+        $('edit_form').enctype='multipart/form-data';
+    });
+//]]>
+</script>
+

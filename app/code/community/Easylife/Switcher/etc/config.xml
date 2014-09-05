@@ -19,7 +19,7 @@
 <config>
     <modules>
         <Easylife_Switcher>
-            <version>1.0.2</version>
+            <version>1.1.0</version>
         </Easylife_Switcher>
     </modules>
     <global>
@@ -36,7 +36,16 @@
         <models>
             <easylife_switcher>
                 <class>Easylife_Switcher_Model</class>
+                <resourceModel>easylife_switcher_resource</resourceModel>
             </easylife_switcher>
+            <easylife_switcher_resource>
+                <class>Easylife_Switcher_Model_Resource</class>
+                <entities>
+                    <hashcode>
+                        <table>easylife_switcher_hascode</table>
+                    </hashcode>
+                </entities>
+            </easylife_switcher_resource>
         </models>
         <resources>
             <easylife_switcher_setup>
@@ -100,6 +109,47 @@
                     </easylife_switcher>
                 </observers>
             </core_block_abstract_to_html_before>
+            <!-- Save images associated with attribute options -->
+            <controller_action_postdispatch_adminhtml_catalog_product_attribute_save>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/optimage</class>
+                        <method>uploadAndSaveImages</method>
+                    </easylife_switcher>
+                </observers>
+            </controller_action_postdispatch_adminhtml_catalog_product_attribute_save>
+            <adminhtml_cache_flush_all>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/optimage</class>
+                        <method>cleanOptImages</method>
+                    </easylife_switcher>
+                </observers>
+            </adminhtml_cache_flush_all>
+            <adminhtml_cache_flush_system>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/optimage</class>
+                        <method>cleanOptImages</method>
+                    </easylife_switcher>
+                </observers>
+            </adminhtml_cache_flush_system>
+            <clean_media_cache_after>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/optimage</class>
+                        <method>cleanOptImages</method>
+                    </easylife_switcher>
+                </observers>
+            </clean_media_cache_after>
+            <clean_catalog_images_cache_after>
+                <observers>
+                    <easylife_switcher>
+                        <class>easylife_switcher/optimage</class>
+                        <method>cleanOptImages</method>
+                    </easylife_switcher>
+                </observers>
+            </clean_catalog_images_cache_after>
         </events>
         <translate>
             <modules>
@@ -129,6 +179,8 @@
                 <media_selector>$$('.product-view .product-img-box')[0]</media_selector>
                 <media_change_callback>product_zoom = new Product.Zoom('image', 'track', 'handle', 'zoom_in', 'zoom_out', 'track_hint');</media_change_callback>
                 <allow_no_stock_select>1</allow_no_stock_select>
+                <use_option_images>color</use_option_images><!-- Use attribute option images as label -->
+                <options_image_resize>40</options_image_resize>
             </settings>
         </easylife_switcher>
     </default>
