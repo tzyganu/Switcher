@@ -118,6 +118,12 @@ Easylife.Switcher = Class.create(Product.Config, {
     transformDropdown: function(selectid){
         var that = this;
         var attributeId = $(selectid).id.replace(/[a-z]*/, '');
+        
+        //skip attributes not configured to replace with swatches
+        if(!this.config.switch_attributes[attributeId]){
+            return;
+        }
+        
         var selectname = $(selectid).name;
         var newId = $(selectid).id +'_switchers';
         //remove previous labels
