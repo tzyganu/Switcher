@@ -104,10 +104,28 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      */
     const DEFAULT_MEDIA_TEMPLATE    = 'catalog/product/view/media.phtml';
     /**
+     * show out of stock combinations
+     */
+    const XML_SHOW_OUT_OF_STOCK_PATH = 'easylife_switcher/settings/out_of_stock';
+    /**
+     * transform specific dropdowns
+     */
+    const XML_TRANSFORM_SPECIFIC_PATH = 'easylife_switcher/settings/transform_specific';
+    /**
+     * keep previously selected values
+     */
+    const XML_KEEP_SELECTED_VALUES = 'easylife_switcher/settings/keep_values';
+    /**
+     * use configurable product image if the simple product does not have one.
+     */
+    const XML_USE_CONF_IMAGE        = 'easylife_switcher/settings/use_conf_image';
+    /**
      * cache for switch attributes
      * @var array
      */
-    protected $_switchAttribtues    = array();
+    protected $_switchAttributes    = array();
+
+    protected $_confProductImage    = null;
 
     /**
      * get additional config for configurable products
@@ -118,13 +136,19 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
     public function getJsonAdditionalConfig(){
         $config = array();
         if (Mage::helper('easylife_switcher')->isEnabled()){
-            $config['transform_dropdowns']  = Mage::getStoreConfigFlag(self::XML_TRANSFORM_PATH);
+            $config['transform_dropdowns']  = Mage::getStoreConfig(self::XML_TRANSFORM_PATH);
             $config['show_added_prices']    = Mage::getStoreConfigFlag(self::XML_ADDED_PRICES_PATH);
         }
         $config['stock']                    = $this->getStockOptions();
         $config['switch_attributes']        = $this->getSwitchAttributes();
         $config['images']                   = $this->getImages();
         $config['option_images']            = $this->getOptionImages();
+        if ($config['transform_dropdowns'] == Easylife_Switcher_Model_Adminhtml_System_Config_Source_Transform::SPECIFIC) {
+            $config['transform_specific'] = explode(',', Mage::getStoreConfig(self::XML_TRANSFORM_SPECIFIC_PATH));
+        }
+        else {
+            $config['transform_specific'] = array();
+        }
 
 
         if (!$this->getProduct()->hasPreconfiguredValues()){
@@ -140,9 +164,13 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
         $config['switch_media_selector']    = Mage::getStoreConfig(self::XML_MEDIA_SELECTOR);
         $config['switch_media_callback']    = Mage::getStoreConfig(self::XML_MEDIA_CALLBACK_PATH);
         $config['allow_no_stock_select']    = Mage::getStoreConfigFlag(self::XML_NO_STOCK_SELECT_PATH);
+        $config['keep_values']              = Mage::getStoreConfigFlag(self::XML_KEEP_SELECTED_VALUES);
 
-        $config['autoselect_first']         = Mage::getStoreConfigFlag(self::XML_TRANSFORM_PATH) && Mage::getStoreConfigFlag(self::XML_AUTOSELECT_FIRST_PATH);
-
+        $config['autoselect_first']         = /*Mage::getStoreConfigFlag(self::XML_TRANSFORM_PATH) &&*/ Mage::getStoreConfigFlag(self::XML_AUTOSELECT_FIRST_PATH);
+        $oldCheck = Mage::registry('old_skip_aleable_check');
+        if (!is_null($oldCheck)){
+            Mage::helper('catalog/product')->setSkipSaleableCheck($oldCheck);
+        }
         return Mage::helper('core')->jsonEncode($config);
     }
 
@@ -195,10 +223,10 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     public function getSwitchAttributes($path = self::XML_USE_IMAGES_PATH){
-        if (!isset($this->_switchAttribtues[$path])){
+        if (!isset($this->_switchAttributes[$path])){
             $allowedString = trim(Mage::getStoreConfig($path),' ,');
             if (!$allowedString){
-                $this->_switchAttribtues[$path] = array();
+                $this->_switchAttributes[$path] = array();
             }
             else{
                 $allowed = explode(',', $allowedString);
@@ -210,10 +238,10 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
                         $allowedAttributeIds[(int)$productAttribute->getId()] = $productAttribute->getAttributeCode();
                     }
                 }
-                $this->_switchAttribtues[$path] = $allowedAttributeIds;
+                $this->_switchAttributes[$path] = $allowedAttributeIds;
             }
         }
-        return $this->_switchAttribtues[$path];
+        return $this->_switchAttributes[$path];
     }
     /**
      * get attribute option images to use for labels
@@ -381,9 +409,28 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
                     }
                     $images[$id][$product->getId()] = (string)$image;
                 }
+                elseif (Mage::getStoreConfigFlag(self::XML_USE_CONF_IMAGE)) {
+                    $images[$id][$product->getId()] = (string)$this->getConfProductImage();
+                }
             }
         }
         return $images;
+    }
+
+    /**
+     * @access public
+     * @return mixed
+     * @author Marius Strajeru <marius.strajeru@gmail.com>
+     */
+    public function getConfProductImage() {
+        if (is_null($this->_confProductImage)) {
+            $this->_confProductImage = Mage::helper('catalog/image')->init($this->getProduct(), 'image');
+            $dimensions = $this->_getImageDimensions();
+            if (!empty($dimensions)){
+                $this->_confProductImage->resize($dimensions[0], $dimensions[1]);
+            }
+        }
+        return $this->_confProductImage;
     }
 
     /**

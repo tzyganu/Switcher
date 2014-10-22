@@ -39,6 +39,7 @@ class Easylife_Switcher_Model_Observer{
             /** @var Mage_Catalog_Model_Product $product */
             $product = $observer->getEvent()->getProduct();
             if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE) {
+                Mage::register('old_skip_aleable_check', Mage::helper('catalog/product')->getSkipSaleableCheck());
                 Mage::helper('catalog/product')->setSkipSaleableCheck(Mage::getStoreConfigFlag(self::XML_SHOW_OUT_OF_STOCK_PATH));
             }
         }
@@ -54,6 +55,7 @@ class Easylife_Switcher_Model_Observer{
      */
     public function checkShowStockOnConfigure(Varien_Event_Observer $observer) {
         if (Mage::helper('easylife_switcher')->isEnabled()){
+            Mage::register('old_skip_aleable_check', Mage::helper('catalog/product')->getSkipSaleableCheck());
             Mage::helper('catalog/product')->setSkipSaleableCheck(Mage::getStoreConfigFlag(self::XML_SHOW_OUT_OF_STOCK_PATH));
         }
         return $this;

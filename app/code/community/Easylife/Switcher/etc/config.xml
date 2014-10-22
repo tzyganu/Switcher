@@ -164,7 +164,8 @@
     <default>
         <easylife_switcher>
             <settings>
-                <enabled>1</enabled>
+                <enabled>0</enabled>
+                <keep_values>1</keep_values>
                 <transform_dropdowns>1</transform_dropdowns>
                 <autoselect_first>1</autoselect_first>
                 <show_added_prices>1</show_added_prices>
@@ -172,9 +173,10 @@
                 <use_images>color</use_images>
                 <image_attribute>small_image</image_attribute>
                 <change_images>1</change_images>
+                <use_conf_image>1</use_conf_image>
                 <change_image_attribtues>color</change_image_attribtues>
                 <change_media_attribtues>color</change_media_attribtues>
-                <image_selector>$('image')</image_selector>
+                <image_selector>$('image') || $$('.product-image img')[0]</image_selector>
                 <image_change_callback>$('image').setStyle({width:'', height:''});$('image').up().addClassName('product-image-zoom');product_zoom = new Product.Zoom('image', 'track', 'handle', 'zoom_in', 'zoom_out', 'track_hint');</image_change_callback>
                 <media_selector>$$('.product-view .product-img-box')[0]</media_selector>
                 <media_change_callback>product_zoom = new Product.Zoom('image', 'track', 'handle', 'zoom_in', 'zoom_out', 'track_hint');</media_change_callback>

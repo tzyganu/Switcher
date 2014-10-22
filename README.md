@@ -1,7 +1,17 @@
 Easylife Switcher
 ========
 
-Configurable products switcher v1.1.0
+Configurable products switcher v1.2.0
+
+**Release Notes 1.2.0 - 2014-10-22**
+
+|Type|Issue|Comment|
+|----|-----|-----|
+|Feature|Manually set attributes to be transformed to labels|You can  now choose to transform only specific dropdowns to labels. You have the option to transform all, none, or select the attributes to be turned into labels|
+|Feature|Keep selected values|You can keep selected values when changing attributes above the current one. See example on the configuration section for field **Keep previously selected values**|
+|Feature|When the image is switched, you can use the cofigurable product image if the simple product does not have its own image| ([35](https://github.com/tzyganu/Switcher/issues/35))|
+|Bug Fix|If you choose to show out of stock combinations all the products that are visible in the configurable products page (related, up-sells) are seen as in stock|[55](https://github.com/tzyganu/Switcher/issues/35). This is partially fixed. All the products that are displayed in the configurable product page but are rendered before the main configurable product will still appear in stock even if they are not. All theproducts rendered after the main product will appear with their real stock state. I have a solution to fix this for all the products but it involves rewriting a block or observing the event `core_block_abstract_to_html_before` and I don't want to do either of them.|
+|Bug Fix|Images are not switched when the configurable product does not have an image|If the configurable product does not have an image and displays the placeholder, images could not be switched with the ones from the simple product. In the default theme this is fixed changing the main image dom selector to `$('image') || $$('.product-image img')[0]`|
 
 **Release Notes 1.1.0 - 2014-09-05**
 
@@ -71,7 +81,9 @@ How to use:
 Configuration:
 ------------
  - **Enabled**: This can enable or disable the extension.
- - **Transform dropdowns to labels**: If set to `Yes` then in the frontend the default dropdowns for the configurable products will be replaced by labels.
+ - **Keep previously selected values** - If set to `Yes` it will allow you to keep selected values when changing attributes from above. Example: You have a t-shirt configurable by color and size in the following combinations: Size S in Red and Green, Size L in Red and Green and Blue, Size XL in Blue. If you first select S Red, then change the size to L, the Red color will still be selected. If you change the size to XL nothing will be selected for color because the XL shirt has only Blue available. .
+ - **Transform dropdowns to labels**: If set to `All` then in the frontend the default dropdowns for the configurable products will be replaced by labels. If set to `Specific` you can select the attributes to be changed to labels.
+ - **Transform only the following attributes**: Available only the attributes that you would like to be changed to labels. The rest will remain dropdowns.
  - **Show added configurable prices in label**: If you set this to `No`, you will not get in the labels or the dropdowns with the configurable attributes the price difference for the different combinations.
  - **Show out of stock configurations**: If set to `Yes` then you will see in the configurable product page the out of stock simple product combinations. By default this is disabled in Magento.
  - **Allow out of stock products to be selected**: If this is set to `Yes` then the customer will be able to click on the labels for the out of stock combinations and select them. He will still get an error when trying to add it to the cart. If it is set to `No` the labels for out of stock combinations will be disabled.
@@ -81,6 +93,7 @@ Configuration:
  - **Switch product images**: This allows you to change the product image or the whole media block when an attribute combination is changed. If you choose to change the image, this will be changed only if there is one available for the simple product. If you have a lot of simple product combinations and choose to change the whole media block it can lead to performance issues.
  - **Change images when these attributes are changed**: It appears only if you choose to change only the main image and allows you to select which attribute change triggers the image change also.
  - **Dom selector for main image**: It appears only if you choose to change only the main image. This should be the prototype selector for the main image element. by default it looks for the element with id `image`.
+ - **Use configurable product image if the simple one does not have images** - If set to `Yes` it will use for simple products that don't have their own image, the configurable product image.
  - **Main image size**: It appears only if you choose to change only the main image. You can specify here the main image size, because I cannot read it from the media block. If empty then the image won't be resized.
  - **Js Callback after main image change**: It appears only if you choose to change only the main image. This is the javascript code that will be executed after the image changes. Useful if you have image zoom.
  - **Change media content when these attributes are changed**: It appears only if you choose to change the media block and it allows you to select which attribute change triggers the media block change also.
@@ -144,6 +157,11 @@ Conflicts:
 The extension **might** conflict with other extensions that handle image switching on attribute change.
 The extension might not work if the js variable used for configurable products page is not named `spConfig`.
 If you changed it's name, change it in this file also: `app/design/frontend/base/default/template/easylife_switcher/catalog/product/view/type/configurable/config.phtml`
+
+If you are using cloudzoom as an image zoomer You need to set this configuration to make both extensions work:
+ - **DOM selector for main image:** `$$('#zoom1 img')[0]` - if you are using cloudzoom with ultimo theme. Otherwise this may be different.
+ - **Js Callback after image change**: `jQuery('#zoom1').data('zoom').destroy();jQuery('#zoom1').attr('href', jQuery('#zoom1 img:first').attr('src'));jQuery('#zoom1').CloudZoom();`
+ - **Js Callback after media change**: `jQuery('.cloud-zoom, .cloud-zoom-gallery').CloudZoom()`
 
 Bug report:
 -----------

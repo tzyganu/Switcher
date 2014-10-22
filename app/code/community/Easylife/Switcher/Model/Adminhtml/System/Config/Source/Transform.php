@@ -21,8 +21,10 @@
  * @package	    Easylife_Switcher
  * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
  */
-class Easylife_Switcher_Model_Adminhtml_System_Config_Source_Attributes{
-    protected $_idKey = 'attribute_code';
+class Easylife_Switcher_Model_Adminhtml_System_Config_Source_Transform{
+    const ALL = 1;
+    const NONE = 0;
+    const SPECIFIC = 2;
     /**
      * available options
      * @var null|mixed
@@ -37,26 +39,18 @@ class Easylife_Switcher_Model_Adminhtml_System_Config_Source_Attributes{
      */
     public function toOptionArray($withEmpty = true){
         if (is_null($this->_options)){
-            $collection = Mage::getResourceModel('catalog/product_attribute_collection')
-                ->addVisibleFilter()
-                ->addFieldToFilter('is_configurable', 1)
-                ->addFieldToFilter('frontend_input', 'select')
-            ;
-            $this->_options = array();
-            if($withEmpty) {
-                $this->_options[] = array(
-                    'label'=>Mage::helper('easylife_switcher')->__('[none]'),
-                    'value'=>''
-                );
-            }
-            foreach ($collection as $attribute){
-                if (Mage::getSingleton('catalog/product_type_configurable')->canUseAttribute($attribute)){
-                    $this->_options[] = array(
-                        'label'=>$attribute->getFrontendLabel(),
-                        'value'=>$attribute->getData($this->_idKey)
-                    );
-                }
-            }
+            $this->_options[] = array(
+                'value' => self::ALL,
+                'label' => Mage::helper('easylife_switcher')->__('All')
+            );
+            $this->_options[] = array(
+                'value' => self::NONE,
+                'label' => Mage::helper('easylife_switcher')->__('None')
+            );
+            $this->_options[] = array(
+                'value' => self::SPECIFIC,
+                'label' => Mage::helper('easylife_switcher')->__('Specific')
+            );
         }
         return $this->_options;
     }

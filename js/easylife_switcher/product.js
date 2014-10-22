@@ -24,6 +24,7 @@ if(typeof Easylife=='undefined') {
     var Easylife = {};
 }
 Easylife.Switcher = Class.create(Product.Config, {
+    currentValues: {},
     /**
      * rewrite initialize to transform dorpdowns and support default configuration
      * @param $super
@@ -118,6 +119,15 @@ Easylife.Switcher = Class.create(Product.Config, {
     transformDropdown: function(selectid){
         var that = this;
         var attributeId = $(selectid).id.replace(/[a-z]*/, '');
+        if (this.config.transform_dropdowns == 0) {
+            return false;
+        }
+        if (this.config.transform_dropdowns == 2) {
+            if (this.config.transform_specific.indexOf(attributeId) == -1) {
+                return false;
+            }
+        }
+
         var selectname = $(selectid).name;
         var newId = $(selectid).id +'_switchers';
         //remove previous labels
@@ -211,15 +221,7 @@ Easylife.Switcher = Class.create(Product.Config, {
      */
     simulateSelect: function(selectid, value){
         $(selectid).value = value;
-        if(document.createEvent) {
-            var evt = document.createEvent('HTMLEvents');
-            evt.initEvent('change',true,true);
-            $(selectid).dispatchEvent(evt);
-        }
-        else {
-            var evt = document.createEventObject();
-            $(selectid).fireEvent('onchange',evt)
-        }
+        $(selectid).simulate('change');
     },
     /**
      * check if a combination is in stock
@@ -244,77 +246,93 @@ Easylife.Switcher = Class.create(Product.Config, {
         return 1;
     },
     /**
+     * keep previously selected values
+     * @param element
+     */
+    keepSelection: function(element) {
+        if (this.config.keep_values && element.nextSetting) {
+            var nextSettingId = $(element.nextSetting).id.replace(/[a-z]*/, '');
+            if (this.currentValues[nextSettingId]) {
+                $(element.nextSetting).value = this.currentValues[nextSettingId];
+                var label = $('attribute' + nextSettingId + '_' + this.currentValues[nextSettingId]);
+                if (label) {
+                    $(label).simulate('click');
+                }
+                else {
+                    $(element.nextSetting).simulate('change');
+                }
+            }
+        }
+    },
+    /**
      * rewrite condigureElement to change the main image or media block
      * @param $super
      * @param element
      * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     configureElement: function($super, element){
-        //parent action
-        $super(element);
+
         try{
+            //parent action
+            $super(element);
             var attributeId = $(element).id.replace(/[a-z]*/, '');
+            this.currentValues[attributeId] = $(element).value;
+            this.keepSelection(element);
             var value = $(element).value;
             var options = this.config.attributes[attributeId].options;
-            //if we should switch something
-            if (this.config.switch_image_type != 0){
-                for (var id in options){
-                    if (options.hasOwnProperty(id)){
-                        if (options[id].id == value){
-                            var product = options[id].allowedProducts[0];
-                            //if we should switch only the image
-                            if (parseInt(this.config.switch_image_type) == 1){
-                                //check id an image is available
-                                if (typeof this.config.switch_images[attributeId] != 'undefined'){
-                                    //...for the current product
-                                    if (typeof this.config.switch_images[attributeId][product] != 'undefined'){
-                                        //get the image selector set in system->configuration
-                                        var image = eval(this.config.main_image_selector);
-                                        //if the image exists
-                                        if (image){
-                                            //change the src
-                                            $(image).src = this.config.switch_images[attributeId][product];
-                                            //hack for default theme zoomer
-                                            //don't call the callback on the first page load
-                                            if (this.fullLoad){
-                                                if (this.config.switch_image_callback){
-                                                    //callback - give it 0.1 seconds for the image src to be changed
-                                                    //a small flicker might occur
-                                                    //if you don't like it you can remove it at your own risk
-                                                    eval.delay('0.1', this.config.switch_image_callback)
-                                                }
-                                            }
-                                        }
-                                    }
+            //if we should not switch anything stop it here
+            if (this.config.switch_image_type == 0){
+                return false;
+            }
+            for (var id in options){
+                if (options.hasOwnProperty(id) && options[id].id == value){
+                    var product = options[id].allowedProducts[0];
+                    //if we should switch only the image
+                    if (parseInt(this.config.switch_image_type) == 1 &&
+                        //check id an image is available for the current product
+                        typeof this.config.switch_images[attributeId] != 'undefined' &&
+                        typeof this.config.switch_images[attributeId][product] != 'undefined'
+                    ) {
+                        //get the image selector set in system->configuration
+                        var image = eval(this.config.main_image_selector);
+                        //if the image exists
+                        if (image){
+                            //change the src
+                            $(image).src = this.config.switch_images[attributeId][product];
+                            //hack for default theme zoomer
+                            //don't call the callback on the first page load
+                            if (this.fullLoad && this.config.switch_image_callback){
+                                //callback - give it 0.1 seconds for the image src to be changed
+                                //a small flicker might occur
+                                //if you don't like it you can remove it at your own risk
+                                eval.delay('0.1', this.config.switch_image_callback)
+                            }
+                        }
+                    }
+                    //if the media block should be changed
+                    if (parseInt(this.config.switch_image_type) == 2 &&
+                        //check if there is a media to change for the current product
+                        typeof this.config.switch_media[attributeId] != 'undefined' &&
+                        typeof this.config.switch_media[attributeId][product] != 'undefined'
+                    ){
+
+                        //get the media block selector from system->configuration
+                        var media = eval(this.config.switch_media_selector);
+                        if (media){
+                            //hack for default theme zoom-er that doesn't work if called twice.
+                            //if it's not the page load
+                            if (this.fullLoad){
+                                $(media).update(this.config.switch_media[attributeId][product]);
+                                if (this.config.switch_media_callback){
+                                    //give it 0.1 seconds to settle in
+                                    //a small flicker might occur
+                                    //if you don't like it you can remove it at your own risk
+                                    eval.delay('0.1', this.config.switch_media_callback)
                                 }
                             }
-                            //if the media block should be changed
-                            if (parseInt(this.config.switch_image_type) == 2){
-                                //check if there is a media to change
-                                if (typeof this.config.switch_media[attributeId] != 'undefined'){
-                                    //...for the current product
-                                    if (typeof this.config.switch_media[attributeId][product] != 'undefined'){
-                                        //ge the media block selector from system->configuration
-                                        var media = eval(this.config.switch_media_selector);
-                                        if (media){
-                                            //hack for default theme zoom-er that doesn't work if called twice.
-                                            //if it's not the page load
-                                            if (this.fullLoad){
-                                                $(media).update(this.config.switch_media[attributeId][product]);
-                                                if (this.config.switch_media_callback){
-                                                    //give it 0.1 seconds to settle in
-                                                    //a small flicker might occur
-                                                    //if you don't like it you can remove it at your own risk
-                                                    eval.delay('0.1', this.config.switch_media_callback)
-                                                }
-                                            }
-                                            else{
-                                                //if on page load, just add the html
-                                                $(media).innerHTML = this.config.switch_media[attributeId][product];
-                                            }
-                                        }
-                                    }
-                                }
+                            else{
+                                //if on page load, just add the html
+                                $(media).innerHTML = this.config.switch_media[attributeId][product];
                             }
                         }
                     }

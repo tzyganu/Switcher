@@ -44,10 +44,22 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </enabled>
+                        <keep_values translate="label" module="easylife_switcher">
+                            <label>Keep previously selected values</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </keep_values>
                         <transform_dropdowns translate="label">
                             <label>Transform dropdowns to labels</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <source_model>easylife_switcher/adminhtml_system_config_source_transform</source_model>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -56,6 +68,19 @@
                                 <enabled>1</enabled>
                             </depends>
                         </transform_dropdowns>
+                        <transform_specific translate="label">
+                            <label>Transform only the following attributes</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>easylife_switcher/adminhtml_system_config_source_attributeids</source_model>
+                            <sort_order>23</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <transform_dropdowns>2</transform_dropdowns>
+                            </depends>
+                        </transform_specific>
                         <autoselect_first translate="label comment">
                             <label>Autoselect first option if none specified</label>
                             <frontend_type>select</frontend_type>
@@ -121,6 +146,18 @@
                                 <transform_dropdowns>1</transform_dropdowns>
                             </depends>
                         </use_images>
+                        <change_images translate="label">
+                            <label>Switch product images</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>easylife_switcher/adminhtml_system_config_source_switch</source_model>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </change_images>
                         <image_attribute translate="label comment">
                             <label>Use this image attribute</label>
                             <frontend_type>select</frontend_type>
@@ -162,18 +199,7 @@
                             </depends>
                             <comment>Images/Hexa codes cand be defined on attribute section. If you choose the same attributes as for "se simple product images instead of labels for attributes", it will have no effect.</comment>
                         </use_option_images>
-                        <change_images translate="label">
-                            <label>Switch product images</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>easylife_switcher/adminhtml_system_config_source_switch</source_model>
-                            <sort_order>60</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                            </depends>
-                        </change_images>
+
                         <change_image_attribtues translate="label comment">
                             <label>Change images when these attributes are changed</label>
                             <frontend_type>multiselect</frontend_type>
@@ -201,6 +227,19 @@
                             </depends>
                             <comment>Prototype expression that selects the main image element</comment>
                         </image_selector>
+                        <use_conf_image translate="label">
+                            <label>Use configurable product image if the simple one does not have images</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>81</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <change_images>1</change_images>
+                            </depends>
+                        </use_conf_image>
                         <image_resize translate="label comment">
                             <label>Main image size</label>
                             <frontend_type>text</frontend_type>

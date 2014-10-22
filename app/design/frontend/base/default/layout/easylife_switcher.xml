@@ -27,6 +27,9 @@
     <PRODUCT_TYPE_configurable>
         <reference name="head">
             <action method="addJs" ifconfig="easylife_switcher/settings/enabled">
+                <js>easylife_switcher/event.simulate.js</js>
+            </action>
+            <action method="addJs" ifconfig="easylife_switcher/settings/enabled">
                 <js>easylife_switcher/product.js</js>
             </action>
             <action method="addCss" ifconfig="easylife_switcher/settings/enabled">
