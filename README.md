@@ -1,7 +1,13 @@
 Easylife Switcher
 ========
 
-Configurable products switcher v1.2.0
+Configurable products switcher v1.2.1
+
+**Release Notes 1.2.1 - 2014-11-05**
+
+|Type|Issue|Comment|
+|----|-----|-----|
+|Bug|Cannot set images for configurable attribute|When selectin to transform only specific attributes, the images and colors could not be used.|
 
 **Release Notes 1.2.0 - 2014-10-22**
 

@@ -91,7 +91,7 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <enabled>1</enabled>
-                                <transform_dropdowns>1</transform_dropdowns>
+                                <transform_dropdowns separator="|">1|2</transform_dropdowns>
                             </depends>
                             <comment>Recommended if you have 2 or more configurable attributes.</comment>
                         </autoselect_first>
@@ -143,7 +143,7 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <enabled>1</enabled>
-                                <transform_dropdowns>1</transform_dropdowns>
+                                <transform_dropdowns separator="|">1|2</transform_dropdowns>
                             </depends>
                         </use_images>
                         <change_images translate="label">
@@ -168,7 +168,7 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <enabled>1</enabled>
-                                <transform_dropdowns>1</transform_dropdowns>
+                                <transform_dropdowns separator="|">1|2</transform_dropdowns>
                             </depends>
                             <comment>For these attributes the product image will be displayed if available instead of the dropdown label.</comment>
                         </image_attribute>
@@ -195,7 +195,7 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <enabled>1</enabled>
-                                <transform_dropdowns>1</transform_dropdowns>
+                                <transform_dropdowns separator="|">1|2</transform_dropdowns>
                             </depends>
                             <comment>Images/Hexa codes cand be defined on attribute section. If you choose the same attributes as for "se simple product images instead of labels for attributes", it will have no effect.</comment>
                         </use_option_images>
