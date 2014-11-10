@@ -38,6 +38,6 @@ class Easylife_Switcher_Helper_Data extends Mage_Core_Helper_Abstract {
      * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     public function isEnabled(){
-        return Mage::getStoreConfigFlag(self::XML_ENABLED_PATH);
+        return Mage::getStoreConfigFlag(self::XML_ENABLED_PATH, Mage::app()->getRequest()->getParam('store'));
     }
 }
