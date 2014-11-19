@@ -1,49 +1,45 @@
-All,All
 "Allow out of stock products to be selected","Allow out of stock products to be selected"
+Attribute,Attribute
 "Autoselect first option if none specified","Autoselect first option if none specified"
 "Block type for media section. Leave empty to use default","Block type for media section. Leave empty to use default"
+Cancel,Cancel
 "Change images when these attributes are changed","Change images when these attributes are changed"
 "Change media content when these attributes are changed","Change media content when these attributes are changed"
 "Changing the configurable value of these attributes will trigger the main image to change, if available.","Changing the configurable value of these attributes will trigger the main image to change, if available."
 "Changing the configurable value of these attributes will trigger the media block to change.","Changing the configurable value of these attributes will trigger the media block to change."
+Colors,Colors
+"Configurable attributes transforms","Configurable attributes transforms"
+"Configure Colors","Configure Colors"
+"Configure Images","Configure Images"
 Default,Default
-Delete,Delete
 "Dom Media block selector","Dom Media block selector"
 "Dom selector for main image","Dom selector for main image"
 "Easylife Switcher","Easylife Switcher"
 Enabled,Enabled
-"For these attributes the product image will be displayed if available instead of the dropdown label.","For these attributes the product image will be displayed if available instead of the dropdown label."
-"Hash code","Hash code"
-Image,Image
-"Images/Hexa codes cand be defined on attribute section. If you choose the same attributes as for ""se simple product images instead of labels for attributes"", it will have no effect.","Images/Hexa codes cand be defined on attribute section. If you choose the same attributes as for ""se simple product images instead of labels for attributes"", it will have no effect."
+"Fill Options","Fill Options"
+Images,Images
 "JS callback to be executed after the main image is changed.","JS callback to be executed after the main image is changed."
 "JS callback to be executed after the media block is changed.","JS callback to be executed after the media block is changed."
 "Keep previously selected values","Keep previously selected values"
-Label,Label
 "Label / Options image size","Label / Options image size"
 "Main image size","Main image size"
 "No image switch","No image switch"
-None,None
-"Options Images","Options Images"
-Preview,Preview
 "Prototype expression that selects the main image element","Prototype expression that selects the main image element"
 "Prototype expression that selects the media block container","Prototype expression that selects the media block container"
 "Recommended if you have 2 or more configurable attributes.","Recommended if you have 2 or more configurable attributes."
-"Save any other attribute changes (if any) before set images","Save any other attribute changes (if any) before set images"
+Save,Save
 Settings,Settings
 "Show added configurable prices in label","Show added configurable prices in label"
 "Show out of stock configurations","Show out of stock configurations"
-Specific,Specific
 "Switch all media section","Switch all media section"
 "Switch main image","Switch main image"
 "Switch product images","Switch product images"
 "Template for media block. Leave empty to use default.","Template for media block. Leave empty to use default."
-"Transform dropdowns to labels","Transform dropdowns to labels"
-"Transform only the following attributes","Transform only the following attributes"
+"There was a problem uploading images","There was a problem uploading images"
+Transformation,Transformation
+"Transformation settings","Transformation settings"
+"Use Configuration for default store view","Use Configuration for default store view"
 "Use configurable product image if the simple one does not have images","Use configurable product image if the simple one does not have images"
-"Use option image or hexa code instead of label for attributes","Use option image or hexa code instead of label for attributes"
-"Use png, gif, jpg, jpeg images","Use png, gif, jpg, jpeg images"
-"Use simple product images instead of labels for attributes","Use simple product images instead of labels for attributes"
 "Use this image attribute","Use this image attribute"
 "Use values like 100x80 or simply 100. Leave empty for no resize","Use values like 100x80 or simply 100. Leave empty for no resize"
 [none],[none]

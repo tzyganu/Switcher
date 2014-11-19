@@ -11,7 +11,7 @@
  *
  * @category   	Easylife
  * @package	    Easylife_Switcher
- * @copyright   Copyright (c) 2013
+ * @copyright   2013 - 2014 Marius Strajeru
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
 /**
@@ -19,14 +19,13 @@
  *
  * @category    Easylife
  * @package	    Easylife_Switcher
- * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
  */
-class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
-    extends Mage_Catalog_Block_Product_View_Type_Configurable{
+class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config extends Mage_Catalog_Block_Product_View_Type_Configurable
+{
     /**
-     * config path to transform dropdowns
+     * config path to transform settings
      */
-    const XML_TRANSFORM_PATH        = 'easylife_switcher/settings/transform_dropdowns';
+    const XML_TRANSFORM_PATH        = 'easylife_switcher/settings/transform';
     /**
      * config path to autoselect first option if none specified
      */
@@ -34,19 +33,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
     /**
      * config path to transform dropdowns
     */
-    const XML_ADDED_PRICES_PATH        = 'easylife_switcher/settings/show_added_prices';
-    /**
-     * config path to use images
-     */
-    const XML_USE_IMAGES_PATH       = 'easylife_switcher/settings/use_images';
-    /**
-     * config path to use option images
-     */
-    const XML_USE_OPTION_IMAGES_PATH= 'easylife_switcher/settings/use_option_images';
-    /**
-     * config path to image attributes
-     */
-    const XML_IMAGE_ATTRIBUTE_PATH  = 'easylife_switcher/settings/image_attribute';
+    const XML_ADDED_PRICES_PATH     = 'easylife_switcher/settings/show_added_prices';
     /**
      * config path to change images
      */
@@ -54,7 +41,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
     /**
      * config path to change image attributes
      */
-    const XML_CHANGE_IMAGE_PATH     = 'easylife_switcher/settings/change_image_attribtues';
+    const XML_CHANGE_IMAGE_PATH     = 'easylife_switcher/settings/change_image_attributes';
     /**
      * config path to js image selector
      */
@@ -66,7 +53,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
     /**
      * config path to labels / options image resize
      */
-    const XML_OPTIONS_IMAGE_RESIZE          = 'easylife_switcher/settings/options_image_resize';
+    const XML_OPTIONS_IMAGE_RESIZE  = 'easylife_switcher/settings/options_image_resize';
     /**
      * config pat to change image callback
      */
@@ -74,7 +61,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
     /**
      * config path to change media attributes
      */
-    const XML_CHANGE_MEDIA_PATH     = 'easylife_switcher/settings/change_media_attribtues';
+    const XML_CHANGE_MEDIA_PATH     = 'easylife_switcher/settings/change_media_attributes';
     /**
      * config path to media selector
      */
@@ -108,13 +95,9 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      */
     const XML_SHOW_OUT_OF_STOCK_PATH = 'easylife_switcher/settings/out_of_stock';
     /**
-     * transform specific dropdowns
-     */
-    const XML_TRANSFORM_SPECIFIC_PATH = 'easylife_switcher/settings/transform_specific';
-    /**
      * keep previously selected values
      */
-    const XML_KEEP_SELECTED_VALUES = 'easylife_switcher/settings/keep_values';
+    const XML_KEEP_SELECTED_VALUES  = 'easylife_switcher/settings/keep_values';
     /**
      * use configurable product image if the simple product does not have one.
      */
@@ -124,67 +107,207 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      * @var array
      */
     protected $_switchAttributes    = array();
+    /**
+     * @var string
+     */
+    protected $_confProductImage;
+    /**
+     * @var array
+     */
+    protected $_switcherConfig;
 
-    protected $_confProductImage    = null;
+    /**
+     * @return array
+     */
+    public function getSwitcherConfig()
+    {
+        if (is_null($this->_switcherConfig)) {
+            $this->_switcherConfig = array();
+            if ($this->getSwitcherHelper()->isEnabled()) {
+                $transform = Mage::getStoreConfig(self::XML_TRANSFORM_PATH);
+                $this->_switcherConfig = $this->getCoreHelper()->jsonDecode($transform);
+            }
+        }
+        return $this->_switcherConfig;
+    }
+
+    /**
+     * @return Easylife_Switcher_Helper_Data
+     */
+    public function getSwitcherHelper()
+    {
+        return Mage::helper('easylife_switcher');
+    }
+
+    /**
+     * @return Mage_Core_Helper_Data
+     */
+    public function getCoreHelper()
+    {
+        return Mage::helper('core');
+    }
+
+    /**
+     * @return Mage_Catalog_Helper_Product
+     */
+    public function getCatalogHelper()
+    {
+        return Mage::helper('catalog/product');
+    }
+
+    /**
+     * @return Easylife_Switcher_Helper_Optimage
+     */
+    public function getImageHelper()
+    {
+        return Mage::helper('easylife_switcher/optimage');
+    }
+
+    /**
+     * @return Mage_Catalog_Helper_Image
+     */
+    public function getCatalogImageHelper()
+    {
+        return Mage::helper('catalog/image');
+    }
 
     /**
      * get additional config for configurable products
      * @access public
      * @return string
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function getJsonAdditionalConfig(){
+    public function getJsonAdditionalConfig()
+    {
         $config = array();
-        if (Mage::helper('easylife_switcher')->isEnabled()){
-            $config['transform_dropdowns']  = Mage::getStoreConfig(self::XML_TRANSFORM_PATH);
-            $config['show_added_prices']    = Mage::getStoreConfigFlag(self::XML_ADDED_PRICES_PATH);
-        }
-        $config['stock']                    = $this->getStockOptions();
-        $config['switch_attributes']        = $this->getSwitchAttributes();
-        $config['images']                   = $this->getImages();
-        $config['option_images']            = $this->getOptionImages();
-        if ($config['transform_dropdowns'] == Easylife_Switcher_Model_Adminhtml_System_Config_Source_Transform::SPECIFIC) {
-            $config['transform_specific'] = explode(',', Mage::getStoreConfig(self::XML_TRANSFORM_SPECIFIC_PATH));
-        }
-        else {
-            $config['transform_specific'] = array();
-        }
-
-
-        if (!$this->getProduct()->hasPreconfiguredValues()){
-            if ($this->getDefaultValues()){
-                $config['defaultValues']    = $this->getDefaultValues();
+        $config['switch'] = array();
+        $switcherConfig = $this->getSwitcherConfig();
+        $attributes = $this->getAllowAttributes();
+        $collectImages = array();
+        foreach ($attributes as $attribute) {
+            /** @var Mage_Catalog_Model_Product_Type_Configurable_Attribute $attribute */
+            /** @var Mage_Catalog_Model_Resource_Eav_Attribute $productAttribute */
+            $productAttribute = $attribute->getProductAttribute();
+            if (isset($switcherConfig[$productAttribute->getId()])) {
+                $switchType = $switcherConfig[$productAttribute->getId()];
+                $attributeSwitchConfig = array();
+                switch ($switchType) {
+                    case 'none' :
+                        break;
+                    case 'labels':
+                        $attributeSwitchConfig['type'] = 'labels';
+                        break;
+                    case 'product_images':
+                        $attributeSwitchConfig['type'] = 'product_images';
+                        $imageAttribute = isset($switcherConfig['options'][$productAttribute->getId()]['product_image'])
+                            ? $switcherConfig['options'][$productAttribute->getId()]['product_image']
+                            : false;
+                        if ($imageAttribute) {
+                            $collectImages[$imageAttribute] = 1;
+                            $attributeSwitchConfig['product_images'] = $imageAttribute;
+                        }
+                        break;
+                    case 'colors':
+                        $attributeSwitchConfig['type'] = 'colors';
+                        //get the used colors
+                        $colors = isset($switcherConfig['options'][$productAttribute->getId()]['color'])
+                            ? $this->getCoreHelper()->jsonDecode(
+                                $switcherConfig['options'][$productAttribute->getId()]['color']
+                            )
+                            : array();
+                        $attributeSwitchConfig['color'] = $colors;
+                        break;
+                    case 'custom_images':
+                        $attributeSwitchConfig['type'] = 'custom_images';
+                        $images = isset($switcherConfig['options'][$productAttribute->getId()]['image'])
+                            ? $this->getCoreHelper()->jsonDecode(
+                                $switcherConfig['options'][$productAttribute->getId()]['image']
+                            )
+                            : array();
+                        $validImages = array();
+                        $dimensions = $this->_getImageDimensions(self::XML_OPTIONS_IMAGE_RESIZE);
+                        foreach ($images as $optionId => $image) {
+                            if ($image && file_exists($this->getImageHelper()->getImageBaseDir().$image)) {
+                                $realImage = $this->getImageHelper()->init($image);
+                                if (!empty($dimensions)) {
+                                    $realImage->resize($dimensions[0], $dimensions[1]);
+                                }
+                                $validImages[$optionId] = (string)$realImage;
+                            }
+                        }
+                        $attributeSwitchConfig['images'] = $validImages;
+                        break;
+                    default:
+                        $params = new Varien_Object(
+                            array(
+                                'attribute' => $productAttribute,
+                                'switch_type' => $switchType,
+                                'result' => array()
+                            )
+                        );
+                        Mage::dispatchEvent('easylife_switcher_config', array('params' => $params));
+                        $attributeSwitchConfig = $params->getData('result');
+                        break;
+                }
+                if ($switchType != 'none' && $attributeSwitchConfig) {
+                    $config['switch'][$productAttribute->getId()] = $attributeSwitchConfig;
+                }
             }
         }
-        $config['switch_image_type']        = $this->getSwitchImageType();
-        $config['switch_images']            = $this->getSwitchImages();
+
+        $config['show_added_prices']    = Mage::getStoreConfigFlag(self::XML_ADDED_PRICES_PATH);
+        $config['stock']                = $this->getStockOptions();
+        $config['images']               = $this->getImages(array_keys($collectImages));
+
         $config['main_image_selector']      = Mage::getStoreConfig(self::XML_MAIN_IMAGE_SELECTOR);
         $config['switch_image_callback']    = Mage::getStoreConfig(self::XML_IMAGE_CALLBACK_PATH);
+
+        $config['switch_image_type']        = $this->getSwitchImageType();
+
+        $config['switch_images']            = $this->getSwitchImages();
         $config['switch_media']             = $this->getSwitchMedia();
         $config['switch_media_selector']    = Mage::getStoreConfig(self::XML_MEDIA_SELECTOR);
         $config['switch_media_callback']    = Mage::getStoreConfig(self::XML_MEDIA_CALLBACK_PATH);
         $config['allow_no_stock_select']    = Mage::getStoreConfigFlag(self::XML_NO_STOCK_SELECT_PATH);
         $config['keep_values']              = Mage::getStoreConfigFlag(self::XML_KEEP_SELECTED_VALUES);
 
-        $config['autoselect_first']         = /*Mage::getStoreConfigFlag(self::XML_TRANSFORM_PATH) &&*/ Mage::getStoreConfigFlag(self::XML_AUTOSELECT_FIRST_PATH);
-        $oldCheck = Mage::registry('old_skip_aleable_check');
-        if (!is_null($oldCheck)){
-            Mage::helper('catalog/product')->setSkipSaleableCheck($oldCheck);
+        if (!$this->getProduct()->hasPreconfiguredValues()) {
+            if ($this->getDefaultValues()) {
+                $config['defaultValues']    = $this->getDefaultValues();
+            }
         }
-        return Mage::helper('core')->jsonEncode($config);
+
+        $oldCheck = Mage::registry('old_skip_aleable_check');
+        if (!is_null($oldCheck)) {
+            $this->getCatalogHelper()->setSkipSaleableCheck($oldCheck);
+        }
+        return $this->getCoreHelper()->jsonEncode($config);
     }
 
+    /**
+     * @return array
+     */
+    public function getCachedAllowedProducts()
+    {
+        /** @var Mage_Catalog_Block_Product_View_Type_Configurable $block */
+        $block = $this->getConfigurableBlock();
+        if ($block) {
+            $simpleProducts = $block->getAllowProducts();
+        } else {
+            $simpleProducts = $this->getAllowProducts();
+        }
+        return $simpleProducts;
+    }
     /**
      * get stock options
      * @access public
      * @return array
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function getStockOptions(){
-        $simpleProducts = $this->getSimpleProducts();
-        $currentProduct = $this->getProduct();
+    public function getStockOptions()
+    {
+        $simpleProducts = $this->getCachedAllowedProducts();
         $stock = array();
         foreach ($simpleProducts as $product) {
+            /** @var Mage_Catalog_Model_Product $product */
             $productId  = $product->getId();
             $stock[$productId] = $product->getIsSalable();
         }
@@ -194,10 +317,10 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
     /**
      * get current product
      * @access public
-     * @return Mage_Catalog_Model_Product|mixed
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
+     * @return Mage_Catalog_Model_Product
      */
-    public function getProduct(){
+    public function getProduct()
+    {
         return Mage::registry('current_product');
     }
 
@@ -205,36 +328,37 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      * get block used for configurable products in layout
      * @access public
      * @return bool|Mage_Core_Block_Abstract
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function getConfigurableBlock(){
+    public function getConfigurableBlock()
+    {
         $block = Mage::app()->getLayout()->getBlock('product.info.configurable');
-        if ($block){
+        if ($block) {
             return $block;
         }
         return false;
     }
 
     /**
-     * get attributes for switchin images
+     * get attributes for switching images
      * @access public
      * @param string $path
      * @return mixed
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function getSwitchAttributes($path = self::XML_USE_IMAGES_PATH){
-        if (!isset($this->_switchAttributes[$path])){
-            $allowedString = trim(Mage::getStoreConfig($path),' ,');
-            if (!$allowedString){
+    public function getSwitchAttributes($path)
+    {
+        if (!isset($this->_switchAttributes[$path])) {
+            $allowedString = trim(Mage::getStoreConfig($path), ' ,');
+            if (!$allowedString) {
                 $this->_switchAttributes[$path] = array();
-            }
-            else{
+            } else {
                 $allowed = explode(',', $allowedString);
                 $allowedAttributeIds = array();
                 $allowedAttributes = $this->getAllowAttributes();
-                foreach ($allowedAttributes as $attribute){
+                foreach ($allowedAttributes as $attribute) {
+                    /** @var Mage_Catalog_Model_Product_Type_Configurable_Attribute $attribute */
+                    /** @var Mage_Catalog_Model_Resource_Eav_Attribute $productAttribute */
                     $productAttribute = $attribute->getProductAttribute();
-                    if (in_array($productAttribute->getAttributeCode(), $allowed)){
+                    if (in_array($productAttribute->getAttributeCode(), $allowed)) {
                         $allowedAttributeIds[(int)$productAttribute->getId()] = $productAttribute->getAttributeCode();
                     }
                 }
@@ -243,116 +367,65 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
         }
         return $this->_switchAttributes[$path];
     }
-    /**
-     * get attribute option images to use for labels
-     * @access public
-     * @return array
-     * @author Emil [carco] Sirbu <emil.sirbu@gmail.com>
-     */
-    public function getOptionImages(){
-        $attributes = $this->getSwitchAttributes(self::XML_USE_OPTION_IMAGES_PATH);
-        if (!$attributes) {
-            return array();
-        }
-
-        $simpleProducts = $this->getSimpleProducts();
-        if(!$simpleProducts) {
-            return array();
-        }
-
-        $optIDs = array();
-        foreach ($simpleProducts as $product){
-            foreach($attributes as $attrId=>$attrCode) {
-                if($attrCode && $product->getData($attrCode)) {
-                    $optIDs[$product->getData($attrCode)] =  $attrId;
-                }
-            }
-        }
-        if(!$optIDs) {
-            return array();
-        }
-
-        $images = array();
-        $options = Mage::getModel('easylife_switcher/optimage')->getOptionCollection(array_keys($optIDs),$byOptIds = true);
-        foreach ($options as $option){
-            if($option->getOptimage()) {
-                $image = Mage::helper('easylife_switcher/optimage')->init($option,'optimage');
-                $dimensions = $this->_getImageDimensions(self::XML_OPTIONS_IMAGE_RESIZE);
-                if (!empty($dimensions)){
-                    $image->resize($dimensions[0], $dimensions[1]);
-                }
-                $images[$option->getAttributeId()][$option->getId()]['image_url'] = (string)$image;
-            } elseif($option->getHexaCode()) {
-                $images[$option->getAttributeId()][$option->getId()]['hexa_code'] = $option->getHexaCode();
-            }
-        }
-        return $images;
-    }
 
     /**
-     * get images to use for labels
-     * @access public
+     * @param array $imageAttributes
      * @return array
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function getImages(){
-        if (count($this->getSwitchAttributes(self::XML_USE_IMAGES_PATH)) == 0){
-            return array();
-        }
-        $block = $this->getConfigurableBlock();
-        if ($block){
-            $simpleProducts = $block->getAllowProducts();
-        }
-        else{
-            $simpleProducts = $this->getAllowProducts();
-        }
+    public function getImages(array $imageAttributes)
+    {
+        $simpleProducts = $this->getCachedAllowedProducts();
         $images = array();
-        $imageAttribute = $this->getImageAttribute();
-        foreach ($this->getSwitchAttributes() as $id=>$code){
-            foreach ($simpleProducts as $product){
-                if ($product->getData($imageAttribute) != '' && $product->getData($imageAttribute) != 'no_selection'){
-                    $image = Mage::helper('catalog/image')->init($product, $this->getImageAttribute());
+        foreach ($imageAttributes as $imageAttribute) {
+            foreach ($simpleProducts as $product) {
+                /** @var Mage_Catalog_Model_Product $product */
+                if ($product->getData($imageAttribute) != '' && $product->getData($imageAttribute) != 'no_selection') {
+                    $image = $this->getCatalogImageHelper()->init($product, $imageAttribute);
                     $dimensions = $this->_getImageDimensions(self::XML_OPTIONS_IMAGE_RESIZE);
-                    if (!empty($dimensions)){
+                    if (!empty($dimensions)) {
                         $image->resize($dimensions[0], $dimensions[1]);
                     }
-                    $images[$id][$product->getId()] = (string)$image;
+                    $images[$imageAttribute][$product->getId()] = (string)$image;
                 }
             }
         }
         return $images;
-    }
-
-    /**
-     * get the image type attribute to be used for labels
-     * @access public
-     * @return mixed
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
-     */
-    public function getImageAttribute(){
-        if (!$this->hasData('image_attribute')){
-            $this->setData('image_attribute', Mage::getStoreConfig(self::XML_IMAGE_ATTRIBUTE_PATH));
-        }
-        return $this->getData('image_attribute');
     }
 
     /**
      * get the default configuration
      * @access public
      * @return array|null
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function getDefaultValues(){
+    public function getDefaultValues()
+    {
         $defaultId = $this->getProduct()->getData(Easylife_Switcher_Helper_Data::DEFAULT_CONFIGURATION_ATTRIBUTE_CODE);
-        if (!$defaultId){
-            return null;
+        if (!$defaultId) {
+            //set first as default
+            if (Mage::getStoreConfigFlag(self::XML_AUTOSELECT_FIRST_PATH)) {
+                $simpleProducts = $this->getCachedAllowedProducts();
+                $default = false;
+                foreach ($simpleProducts as $product) {
+                    /** @var Mage_Catalog_Model_Product $product */
+                    if ($product->getIsSalable()) {
+                        $default = $product;
+                    }
+                }
+            } else {
+                $default = false;
+            }
+        } else {
+            $default = Mage::getModel('catalog/product')
+                ->setStoreId(Mage::app()->getStore()->getId())
+                ->load($defaultId);
         }
-        $default = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getId())->load($defaultId);
-        if (!$default->getId()){
+        if (!$default || !$default->getId()) {
             return null;
         }
         $defaultValues = array();
-        foreach ($this->getAllowAttributes() as $attribute){
+        foreach ($this->getAllowAttributes() as $attribute) {
+            /** @var Mage_Catalog_Model_Product_Type_Configurable_Attribute $attribute */
+            /** @var Mage_Catalog_Model_Resource_Eav_Attribute $productAttribute */
             $productAttribute = $attribute->getProductAttribute();
             $defaultValues[$productAttribute->getId()] = $default->getData($productAttribute->getAttributeCode());
         }
@@ -360,99 +433,83 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
     }
 
     /**
-     * get the simple products
-     * @access public
-     * @return array
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
-     */
-    public function getSimpleProducts(){
-        $block = $this->getConfigurableBlock();
-        if ($block){
-            $simpleProducts = $block->getAllowProducts();
-        }
-        else{
-            $simpleProducts = $this->getAllowProducts();
-        }
-        return $simpleProducts;
-    }
-
-    /**
      * get switch type
      * @access public
      * @return mixed
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function getSwitchImageType(){
+    public function getSwitchImageType()
+    {
         return Mage::getStoreConfig(self::XML_CHANGE_IMAGES_PATH);
     }
 
     /**
+     * @access public
+     * @return mixed
+     */
+    public function getConfProductImage()
+    {
+        if (is_null($this->_confProductImage)) {
+            $this->_confProductImage = $this->getCatalogImageHelper()->init($this->getProduct(), 'image');
+            $dimensions = $this->_getImageDimensions();
+            if (!empty($dimensions)) {
+                $this->_confProductImage->resize($dimensions[0], $dimensions[1]);
+            }
+        }
+        return $this->_confProductImage;
+    }
+    /**
      * get main images for simple products
      * @access public
      * @return array
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function getSwitchImages(){
-        if ($this->getSwitchImageType() != Easylife_Switcher_Model_Adminhtml_System_Config_Source_Switch::SWITCH_MAIN){
+    public function getSwitchImages()
+    {
+        if ($this->getSwitchImageType() != Easylife_Switcher_Model_Adminhtml_System_Config_Source_Switch::SWITCH_MAIN) {
             return array();
         }
         $changeAttributes = $this->getSwitchAttributes(self::XML_CHANGE_IMAGE_PATH);
-        $simpleProducts = $this->getSimpleProducts();
+        $simpleProducts = $this->getCachedAllowedProducts();
         $images = array();
-        foreach ($changeAttributes as $id=>$code){
-            foreach ($simpleProducts as $product){
-                if ($product->getData('image') != '' && $product->getData('image') != 'no_selection'){
+        foreach ($changeAttributes as $id=>$code) {
+            foreach ($simpleProducts as $product) {
+                if ($product->getData('image') != '' && $product->getData('image') != 'no_selection') {
                     $image = Mage::helper('catalog/image')->init($product, 'image');
                     $dimensions = $this->_getImageDimensions();
-                    if (!empty($dimensions)){
+                    if (!empty($dimensions)) {
                         $image->resize($dimensions[0], $dimensions[1]);
                     }
                     $images[$id][$product->getId()] = (string)$image;
-                }
-                elseif (Mage::getStoreConfigFlag(self::XML_USE_CONF_IMAGE)) {
+                } elseif (Mage::getStoreConfigFlag(self::XML_USE_CONF_IMAGE)) {
                     $images[$id][$product->getId()] = (string)$this->getConfProductImage();
                 }
             }
         }
         return $images;
     }
-
-    /**
-     * @access public
-     * @return mixed
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
-     */
-    public function getConfProductImage() {
-        if (is_null($this->_confProductImage)) {
-            $this->_confProductImage = Mage::helper('catalog/image')->init($this->getProduct(), 'image');
-            $dimensions = $this->_getImageDimensions();
-            if (!empty($dimensions)){
-                $this->_confProductImage->resize($dimensions[0], $dimensions[1]);
-            }
-        }
-        return $this->_confProductImage;
-    }
-
     /**
      * get media images for changing full media
      * @access public
      * @return array
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function getSwitchMedia(){
-        if ($this->getSwitchImageType() != Easylife_Switcher_Model_Adminhtml_System_Config_Source_Switch::SWITCH_MEDIA){
+    public function getSwitchMedia()
+    {
+        if ($this->getSwitchImageType() !=
+            Easylife_Switcher_Model_Adminhtml_System_Config_Source_Switch::SWITCH_MEDIA) {
             return array();
         }
         $changeAttributes = $this->getSwitchAttributes(self::XML_CHANGE_MEDIA_PATH);
-        $simpleProducts = $this->getSimpleProducts();
+        $simpleProducts = $this->getCachedAllowedProducts();
         $images = array();
         $block = Mage::app()->getLayout()
             ->createBlock($this->_getMediaBlockType())
             ->setTemplate($this->_getMediaBlockTemplate());
-        foreach ($changeAttributes as $id=>$code){
-            foreach ($simpleProducts as $product){
-                $product = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getId())->load($product->getId());
-                if ($product->getData('image') != '' && $product->getData('image') != 'no_selection'){
+        foreach ($changeAttributes as $id=>$code) {
+            foreach ($simpleProducts as $product) {
+                /** @var Mage_Catalog_Model_Product $product */
+                $product = Mage::getModel('catalog/product')
+                    ->setStoreId(Mage::app()->getStore()->getId())
+                    ->load($product->getId());
+                if ($product->getData('image') != '' && $product->getData('image') != 'no_selection') {
                     $block->setProduct($product);
                     $images[$id][$product->getId()] = $block->toHtml();
                 }
@@ -465,18 +522,19 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      * @param string $path
      * @return array|bool
      */
-    protected function _getImageDimensions($path = self::XML_IMAGE_RESIZE){
+    protected function _getImageDimensions($path = self::XML_IMAGE_RESIZE)
+    {
         $value = Mage::getStoreConfig($path);
-        if (!$value){
+        if (!$value) {
             return false;
         }
         $dimensions = explode('x', $value, 2);
-        if (!isset($dimensions[1])){
+        if (!isset($dimensions[1])) {
             $dimensions[1] = $dimensions[0];
         }
         $dimensions[0] = (int)$dimensions[0];
         $dimensions[1] = (int)$dimensions[1];
-        if($dimensions[0]<=0 || $dimensions[1]<=0) {
+        if ($dimensions[0]<=0 || $dimensions[1]<=0) {
             return false;
         }
         return $dimensions;
@@ -486,11 +544,11 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      * get the media block alias
      * @access protected
      * @return string
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    protected function _getMediaBlockType(){
+    protected function _getMediaBlockType()
+    {
         $block = Mage::getStoreConfig(self::XML_MEDIA_BLOCK_TYPE_PATH);
-        if (!$block){
+        if (!$block) {
             $block = self::DEFAULT_MEDIA_BLOCK_TYPE;
         }
         return $block;
@@ -500,11 +558,11 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config
      * get the media block template
      * @access protected
      * @return string
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    protected function _getMediaBlockTemplate(){
+    protected function _getMediaBlockTemplate()
+    {
         $template = Mage::getStoreConfig(self::XML_MEDIA_TEMPLATE_PATH);
-        if (!$template){
+        if (!$template) {
             $template = self::DEFAULT_MEDIA_TEMPLATE;
         }
         return $template;

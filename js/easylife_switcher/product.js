@@ -10,7 +10,7 @@
  *
  * @category   	Easylife
  * @package	    Easylife_Switcher
- * @copyright   Copyright (c) 2013
+ * @copyright   2013 - 2014 Marius Strajeru
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
 /**
@@ -18,93 +18,51 @@
  *
  * @category    Easylife
  * @package	    Easylife_Switcher
- * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
  */
+
 if(typeof Easylife=='undefined') {
     var Easylife = {};
 }
 Easylife.Switcher = Class.create(Product.Config, {
     currentValues: {},
+    rewritten: false,
     /**
      * rewrite initialize to transform dorpdowns and support default configuration
      * @param $super
      * @param config
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     initialize: function($super, config){
-        if (typeof config.defaultValues == 'undefined'){
-            var separatorIndex = window.location.href.indexOf('#');
-            if (separatorIndex != -1) {
-                var paramsStr = window.location.href.substr(separatorIndex+1);
-                var urlValues = paramsStr.toQueryParams();
-                if (!config.defaultValues) {
-                    config.defaultValues = {};
-                }
-                for (var i in urlValues) {
-                    if (typeof config.attributes[i] != 'undefined'){
-                        config.defaultValues[i] = urlValues[i];
-                    }
-                }
-            }
-            if (config.autoselect_first) {
-                var count = 0;
-                if (typeof config.defaultValues != 'undefined'){
-                    for (var k in config.defaultValues) {
-                        if (config.defaultValues.hasOwnProperty(k)) {
-                            ++count;
-                        }
-                    }
-                }
-                if (count == 0){
-                    config.defaultValues = {};
-                    for (var attribute in config.attributes){
-                        if (config.attributes.hasOwnProperty(attribute)){
-                            var option = config.attributes[attribute].options[0].id;
-                            config.defaultValues[attribute] = option;
-                        }
-                    }
-                }
-            }
-        }
         $super(config);
         this.rewritten = true;
-        if (this.config.transform_dropdowns){
-            this.transformDropdowns();
-        }
+        this.transformDropdowns();
     },
     /**
      * rewrite fillSelect to transform elements to labels
      * @param $super
      * @param element
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     fillSelect: function($super, element){
         $super(element);
-        if (this.config.transform_dropdowns){
-            this.transformDropdown(element);
-        }
-        else {
-            if (!this.config.allow_no_stock_select) {
-                var attributeId = element.id.replace(/[a-z]*/, '');
-                var options = this.getAttributeOptions(attributeId);
-                for (var i in options) {
-                    if (options.hasOwnProperty(i)){
-                        var optval = options[i].id;
-                        var inStock = this.isInStock(attributeId, optval)
-                        $(element).select('option').each (function(elem){
-                            if ($(elem).value == optval && !inStock) {
-                                $(elem).disabled="disabled";
-                            }
-                        });
-                    }
+        //if (this.config.transform_dropdowns){
+        var transformed = this.transformDropdown(element);
+        if (!transformed && !this.getConfigValue(this.config, 'allow_no_stock_select', false)) {
+            var attributeId = element.id.replace(/[a-z]*/, '');
+            var options = this.getAttributeOptions(attributeId);
+            for (var i in options) {
+                if (options.hasOwnProperty(i)){
+                    var optVal = options[i].id;
+                    var inStock = this.isInStock(attributeId, optVal);
+                    $(element).select('option').each (function(elem){
+                        if ($(elem).value == optVal && !inStock) {
+                            $(elem).disabled="disabled";
+                        }
+                    });
                 }
             }
         }
-
     },
     /**
      * transform dropdowns to labels
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     transformDropdowns: function(){
         for (var i=0; i<this.settings.length;i++){
@@ -114,95 +72,174 @@ Easylife.Switcher = Class.create(Product.Config, {
     /**
      * transform one dropdown to labels
      * @param selectid
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     transformDropdown: function(selectid){
         var that = this;
         var attributeId = $(selectid).id.replace(/[a-z]*/, '');
-        if (this.config.transform_dropdowns == 0) {
-            return false;
-        }
-        if (this.config.transform_dropdowns == 2) {
-            if (this.config.transform_specific.indexOf(attributeId) == -1) {
-                return false;
+        var transformed = false;
+        var switchConfig = this.getConfigValue(this.config, 'switch/' + attributeId, false);
+        if (switchConfig && typeof(switchConfig) == "object") {
+            transformed = true;
+            //transform dropdown
+            var newId = $(selectid).id +'_switchers';
+            //remove previous labels
+            if ($(newId)){
+                $(newId).remove();
             }
-        }
+            //hide the select
+            //actually move it outside the visible area so the validation will still work
+            $(selectid).setStyle({
+                left:"-10000px",
+                position: "absolute"
+            });
+            $(selectid).insert({after: '<div class="switcher-field switcher-'+that.config.attributes[attributeId]['code']+'" id="' + newId + '"></div>'});
+            $(selectid).childElements().each(function(elem, index){
+                //skip first element "Choose..."
+                if (index == 0){
+                    return;
+                }
+                var optVal = $(elem).value;
+                var optText = that.getOptionText(elem, optVal, switchConfig);
+                var inStock = that.isInStock(attributeId, optVal);
+                var labelClass = that.getLabelClass(elem, attributeId, optVal, inStock);
 
-        var selectname = $(selectid).name;
-        var newId = $(selectid).id +'_switchers';
-        //remove previous labels
-        if ($(newId)){
-            $(newId).remove();
-        }
-        //hide the select
-        //actually move it outside the visible area so the validation will still work
-        $(selectid).setStyle({
-            left:"-10000px",
-            position: "absolute"
-        });
-        //create a container
-        $(selectid).insert({after: '<div class="switcher-field switcher-'+that.config.attributes[attributeId]['code']+'" id="' + newId + '"></div>'});
-        //create a label for each element
-        $(selectid).childElements().each(function(elem, index){
-            //skip first element "Choose..."
-            if (index == 0){
-                return;
-            }
-            var optval = $(elem).value;
-            if (optval != ''){
-                var opttext = $(elem).innerHTML;
-                if (typeof that.config.images[attributeId] != 'undefined' || typeof that.config.option_images[attributeId] != 'undefined'){
-                    for ( var j=0; j<that.config.attributes[attributeId].options.length;j++){
-                        if (that.config.attributes[attributeId].options[j].id != optval){
-                            continue;
-                        }
-                        var product = parseInt(that.config.attributes[attributeId].options[j].allowedProducts[0]);
-                        //replace label with image if available
-                        var replaced = false;
-                        if (typeof that.config.images[attributeId] != 'undefined' && typeof that.config.images[attributeId][product] != 'undefined') {
-                            opttext = '<img src="' + that.config.images[attributeId][product] + '" alt="' + opttext + '" title="' + opttext + '" />';
-                        } else if (typeof that.config.option_images[attributeId] != 'undefined' && typeof that.config.option_images[attributeId][optval] != 'undefined') {
-                            if(typeof that.config.option_images[attributeId][optval]['image_url'] != 'undefined') {
-                                opttext = '<img src="' + that.config.option_images[attributeId][optval]['image_url'] + '" alt="' + opttext + '" title="' + opttext + '" />';
-                            } else if( typeof that.config.option_images[attributeId][optval]['hexa_code'] != 'undefined') {
-                                opttext = '<span class="switcher-hexacode" title="' + opttext + '" style="background-color:' + that.config.option_images[attributeId][optval]['hexa_code']+'"></span>';
-                            }
-                        }
-
-                    }
-                }
-                var labelClass = '';
-                if ($(elem).selected){
-                    labelClass = ' selected';
-                }
-                var inStock = that.isInStock(attributeId, optval);
-                //check if the combination is in stock
-                if (!inStock){
-                    labelClass += ' no-stock';
-                    if (that.config.allow_no_stock_select){
-                        labelClass += ' allow-select';
-                    }
-                }
-                $(newId).insert('<label class="switcher-label' + labelClass + '" id="' + $(selectid).id + '_' + optval + '" value="' + optval + '">'+opttext+'</label></div>')
+                $(newId).insert('<label class="switcher-label' + labelClass + '" id="' + $(selectid).id + '_' + optVal + '" value="' + optVal + '">'+optText+'</label></div>');
                 //change the select value on click
-                if (inStock || that.config.allow_no_stock_select){
-                    Event.observe($($(selectid).id + '_' + optval), 'click', function() {
-                        that.selectValue(this, $(this).readAttribute('value'), selectid);
-                    });
-                }
-                // Make IE 7 & 8 behave like browsers - damn you IE
+                that.bindClickEvent(selectid, optVal, inStock);
+
+                // Make IE 7 & 8 behave like real browsers - damn you IE
                 if (index == $(selectid).childElements().length - 1){
                     $(newId).insert('<div style="clear:both"></div>');
                 }
+            })
+        }
+        return transformed;
+    },
+    /**
+     * bind click event on labels
+     */
+    bindClickEvent: function(selectid, optVal, inStock) {
+        var that = this;
+        if (inStock || this.getConfigValue(this.config, 'allow_no_stock_select', false)){
+            Event.observe($($(selectid).id + '_' + optVal), 'click', function() {
+                that.selectValue(this, $(this).readAttribute('value'), selectid);
+            });
+        }
+    },
+    /**
+     * get the class name of the labels
+     */
+    getLabelClass: function (elem, attributeId, optVal, inStock) {
+        var labelClass = '';
+        if ($(elem).selected){
+            labelClass = ' selected';
+        }
+        //check if the combination is in stock
+        if (!inStock){
+            labelClass += ' no-stock';
+            labelClass += this.getConfigValue(this.config, 'allow_no_stock_select', false) ? ' allow-select' : '';
+        }
+        return labelClass;
+    },
+    /**
+     * ge the option text of the label
+     */
+    getOptionText: function(elem, value, config){
+        var text = $(elem).innerHTML;
+        var configType = this.getConfigValue(config, 'type', false);
+        if (!configType) {
+            return text;
+        }
+        switch (config.type) {
+            case 'custom_images':
+                var image = this.getConfigValue(config, 'images/' + value, false);
+                if (image) {
+                    text = '<img src="' + image + '" alt="' + text +'" />';
+                }
+                break;
+            case 'product_images':
+                //get the images
+                var imageAttribute = this.getConfigValue(config, 'product_images', '');
+                var images = this.getConfigValue(this.config.images, imageAttribute, []);
+                //get first allowed product
+                var attrId = $(elem).parentNode.id.replace(/[a-z]*/, '');
+                var options = this.getConfigValue(this.config.attributes, attrId + '/options', false);
+                var productId = this.getFirstProductId(options, value);
+                if (productId && (image = this.getConfigValue(images, productId, false))) {
+                    text = '<img src="' + image + '" alt="' + text +'" />';
+                }
+                break;
+            case 'colors':
+                var color = this.getConfigValue(config, 'color/' + value, false);
+                if (color) {
+                    text = '<span class="switcher-hexacode" title="' + text + '" style="background-color:' + color +'"></span>'
+                }
+                break;
+            default:
+                text = this.handleCustomOptionText(text, elem, value, config);
+                break;
+        }
+        return text;
+    },
+    /**
+     * this can be overwritten in a custom class if more transformation types are added.
+     * by default it returns the current text
+     * @param text
+     * @param elem
+     * @param value
+     * @param config
+     * @returns {*}
+     */
+    handleCustomOptionText: function(text, elem, value, config) {
+        return text;
+    },
+    /**
+     * get the first allowed product
+     * @param options
+     * @param value
+     * @returns {boolean}
+     */
+    getFirstProductId: function(options, value) {
+        var productId = false;
+        //get first product in the list
+        for (var i in options) {
+            if (options.hasOwnProperty(i) && options[i].id == value) {
+                productId = this.getConfigValue(options[i], 'products/0', false);
             }
-        })
+        }
+        return productId;
+    },
+    /**
+     * get values from an array or object. Similar to magento's getData for Varien_Object
+     * @param config
+     * @param path
+     * @param def
+     * @returns {*}
+     */
+    getConfigValue: function(config, path, def) {
+        var parts = path.split('/');
+        var cloneConfig = config;
+        var i = 0;
+        while (i < parts.length && cloneConfig != -1){
+            var part = parts[i];
+            if (typeof cloneConfig[part] != "undefined") {
+                cloneConfig = cloneConfig[part];
+            }
+            else {
+                cloneConfig = -1;
+            }
+            i++;
+        }
+        if (cloneConfig == -1) {
+            return def;
+        }
+        return cloneConfig;
     },
     /**
      * select a value when clicking a label
      * @param elem
      * @param value
      * @param selectid
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     selectValue: function(elem, value, selectid){
         if ($(elem)){
@@ -217,7 +254,6 @@ Easylife.Switcher = Class.create(Product.Config, {
      * simulate onchange event on select
      * @param selectid
      * @param value
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     simulateSelect: function(selectid, value){
         $(selectid).value = value;
@@ -227,23 +263,23 @@ Easylife.Switcher = Class.create(Product.Config, {
      * check if a combination is in stock
      * @param attributeId
      * @param value
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     isInStock: function(attributeId, value){
-        var that = this;
-        for ( var j=0; j<that.config.attributes[attributeId].options.length;j++){
-            if (that.config.attributes[attributeId].options[j].id != value){
-                continue;
+        var options = this.getConfigValue(this.config, 'attributes/' + attributeId + '/options', []);
+        var allowedProducts = [];
+        for ( var j=0; j<options.length;j++){
+            if (options[j].id == value){
+                allowedProducts = this.getConfigValue(options[j], 'allowedProducts', []);
+                break;
             }
-            for (var i = 0; i<that.config.attributes[attributeId].options[j].allowedProducts.length;i++){
-                var product = that.config.attributes[attributeId].options[j].allowedProducts[i];
-                if (this.config.stock[product] == 1){
-                    return 1;
-                }
-            }
-            return 0;
         }
-        return 1;
+        for (var i = 0; i<allowedProducts.length;i++){
+            var product = allowedProducts[i];
+            if (this.getConfigValue(this.config, 'stock/' + product, 0) == 1){
+                return 1;
+            }
+        }
+        return 0;
     },
     /**
      * keep previously selected values
@@ -265,89 +301,86 @@ Easylife.Switcher = Class.create(Product.Config, {
         }
     },
     /**
-     * rewrite condigureElement to change the main image or media block
-     * @param $super
-     * @param element
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
+     * change the main image of the product
+     * @param attributeId
+     * @param product
      */
-    configureElement: function($super, element){
-
-        try{
-            //parent action
-            $super(element);
-            var attributeId = $(element).id.replace(/[a-z]*/, '');
-            this.currentValues[attributeId] = $(element).value;
-            this.keepSelection(element);
-            var value = $(element).value;
-            var options = this.config.attributes[attributeId].options;
-            //if we should not switch anything stop it here
-            if (this.config.switch_image_type == 0){
-                return false;
+    changeMainImage: function(attributeId, product) {
+        var productImage = this.getConfigValue(this.config, 'switch_images/' + attributeId + '/' + product, false);
+        var image = eval(this.getConfigValue(this.config, 'main_image_selector', false));
+        if (productImage && image) {
+            //change the src
+            $(image).src = productImage;
+            //hack for default theme zoomer
+            //don't call the callback on the first page load
+            var callback = this.getConfigValue(this.config, 'switch_image_callback', false);
+            if (this.fullLoad && callback){
+                //callback - give it 0.1 seconds for the image src to be changed
+                //a small flicker might occur
+                //if you don't like it you can remove it at your own risk
+                eval.delay('0.1', callback)
             }
-            for (var id in options){
-                if (options.hasOwnProperty(id) && options[id].id == value){
-                    var product = options[id].allowedProducts[0];
-                    //if we should switch only the image
-                    if (parseInt(this.config.switch_image_type) == 1 &&
-                        //check id an image is available for the current product
-                        typeof this.config.switch_images[attributeId] != 'undefined' &&
-                        typeof this.config.switch_images[attributeId][product] != 'undefined'
-                    ) {
-                        //get the image selector set in system->configuration
-                        var image = eval(this.config.main_image_selector);
-                        //if the image exists
-                        if (image){
-                            //change the src
-                            $(image).src = this.config.switch_images[attributeId][product];
-                            //hack for default theme zoomer
-                            //don't call the callback on the first page load
-                            if (this.fullLoad && this.config.switch_image_callback){
-                                //callback - give it 0.1 seconds for the image src to be changed
-                                //a small flicker might occur
-                                //if you don't like it you can remove it at your own risk
-                                eval.delay('0.1', this.config.switch_image_callback)
-                            }
-                        }
-                    }
-                    //if the media block should be changed
-                    if (parseInt(this.config.switch_image_type) == 2 &&
-                        //check if there is a media to change for the current product
-                        typeof this.config.switch_media[attributeId] != 'undefined' &&
-                        typeof this.config.switch_media[attributeId][product] != 'undefined'
-                    ){
-
-                        //get the media block selector from system->configuration
-                        var media = eval(this.config.switch_media_selector);
-                        if (media){
-                            //hack for default theme zoom-er that doesn't work if called twice.
-                            //if it's not the page load
-                            if (this.fullLoad){
-                                $(media).update(this.config.switch_media[attributeId][product]);
-                                if (this.config.switch_media_callback){
-                                    //give it 0.1 seconds to settle in
-                                    //a small flicker might occur
-                                    //if you don't like it you can remove it at your own risk
-                                    eval.delay('0.1', this.config.switch_media_callback)
-                                }
-                            }
-                            else{
-                                //if on page load, just add the html
-                                $(media).innerHTML = this.config.switch_media[attributeId][product];
-                            }
-                        }
-                    }
+        }
+    },
+    /**
+     * change the media block for the product
+     * @param attributeId
+     * @param product
+     */
+    changeMediaBlock: function(attributeId, product) {
+        var mediaHtml = this.getConfigValue(this.config, 'switch_media/' + attributeId + '/' + product, false);
+        var mediaEval = this.getConfigValue(this.config, 'switch_media_selector', false);
+        var media = mediaEval ? eval(mediaEval) : false;
+        if (media && mediaHtml){
+            //hack for default theme zoom-er that doesn't work if called twice.
+            //if it's not the page load
+            $(media).innerHTML = mediaHtml;
+            if (this.fullLoad){
+                var callback = this.getConfigValue(this.config, 'switch_media_callback', false);
+                if (callback){
+                    //give it 0.1 seconds to settle in
+                    //a small flicker might occur
+                    //if you don't like it you can remove it at your own risk
+                    eval.delay('0.1', callback)
                 }
             }
         }
-        catch (e){
-            console.log(e);
+    },
+    /**
+     * rewrite configureElement to change the main image or media block
+     * @param $super
+     * @param element
+     */
+    configureElement: function($super, element){
+        $super(element);
+        var attributeId = $(element).id.replace(/[a-z]*/, '');
+        this.currentValues[attributeId] = $(element).value;
+        this.keepSelection(element);
+        var value = $(element).value;
+        //var options = this.config.attributes[attributeId].options;
+        //if we should not switch anything stop it here
+        var switchType = this.getConfigValue(this.config, 'switch_image_type', 0);
+        if (switchType == 0) {
+            return ;
+        }
+        var options = this.getConfigValue(this.config, 'attributes/' + attributeId + '/options', []);
+        for (var id in options){
+            if (options.hasOwnProperty(id) && options[id].id == value){
+                var product = options[id].allowedProducts[0];
+                if (switchType == 1) {
+                    this.changeMainImage(attributeId, product);
+                }
+                else if(switchType == 2) {
+                    //var product = this.getConfigValue(this.config, 'switch_media/' + attributeId + '/' + product)
+                    this.changeMediaBlock(attributeId, product);
+                }
+            }
         }
     },
     /**
      * rewrite configureForValues to avoid calling the switch callback on first load
      * this may not be necessary if the default theme zoomer is not used
      * @param $super
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     configureForValues: function($super){
         this.fullLoad = false;
@@ -355,7 +388,7 @@ Easylife.Switcher = Class.create(Product.Config, {
         this.fullLoad = true;
     },
     getOptionLabel : function($super, option, price) {
-        if (this.config.show_added_prices) {
+        if (this.getConfigValue(this.config, 'show_added_prices', false)) {
             return $super(option, price);
         }
         return option.label;

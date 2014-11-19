@@ -11,7 +11,7 @@
  *
  * @category   	Easylife
  * @package	    Easylife_Switcher
- * @copyright   Copyright (c) 2013
+ * @copyright   2013 - 2014 Marius Strajeru
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
 /**
@@ -19,9 +19,9 @@
  *
  * @category    Easylife
  * @package	    Easylife_Switcher
- * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
  */
-class Easylife_Switcher_Model_Adminhtml_System_Config_Source_Switch {
+class Easylife_Switcher_Model_Adminhtml_System_Config_Source_Switch
+{
     /**
      * don't swithc images
      */
@@ -43,10 +43,10 @@ class Easylife_Switcher_Model_Adminhtml_System_Config_Source_Switch {
      * get the list of options
      * @access public
      * @return mixed|null
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function toOptionArray(){
-        if (is_null($this->_options)){
+    public function toOptionArray()
+    {
+        if (is_null($this->_options)) {
             $this->_options = array();
             $this->_options[] = array(
                 'value' => self::NO_SWITCH,

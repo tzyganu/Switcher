@@ -1,0 +1,45 @@
+<?php
+/**
+ * Easylife_Switcher extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MIT License
+ * that is bundled with this package in the file LICENSE_EASYLIFE_SWITCHER.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category   	Easylife
+ * @package	    Easylife_Switcher
+ * @copyright   2013 - 2014 Marius Strajeru
+ * @license	    http://opensource.org/licenses/mit-license.php MIT License
+ */
+/** @var Easylife_Switcher_Block_Adminhtml_System_Attribute_Renderer $this */
+echo $this->getForm()->toHtml();
+?>
+<input type="hidden" id="<?php echo $this->getHtmlId()?>" /><!-- so dependencies would work -->
+<iframe name="iframeSwitcherSave" style="display:none; width:100%;" src="<?php echo $this->getJsUrl() ?>blank.html"></iframe>
+<div id="<?php echo $this->getHtmlId()?>_options" class="backup-dialog" style="display:none;top:10%;width:auto;">
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="head-edit-form fieldset-legend"><?php echo $this->__('Fill Options')?></h4>
+        </div>
+        <div class="content">
+            <div id="<?php echo $this->getHtmlId()?>_options_content"></div>
+        </div>
+        <div class="buttons-set">
+            <div class="f-right">
+                <button class="scalable " type="button" onclick="<?php echo $this->getHtmlId()?>_switcher_config.save();$(<?php echo $this->getHtmlId()?>_options).hide()"><span><?php echo $this->__('Save')?></span></button>
+                <button class="scalable " type="button" onclick="$(<?php echo $this->getHtmlId()?>_options).hide()"><span><?php echo $this->__('Cancel')?></span></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var <?php echo $this->getHtmlId()?>_switcher_config = '';
+    document.observe("dom:loaded", function() {
+        <?php echo $this->getHtmlId()?>_switcher_config = new Easylife.SwitcherSystem('row_' + '<?php echo $this->getHtmlId()?>', {
+            prefix: '<?php echo $this->getHtmlId()?>'
+        });
+    })
+</script>

@@ -13,7 +13,7 @@
     var eventMatchers = {
         'HTMLEvents': /^(?:load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll)$/,
         'MouseEvents': /^(?:click|mouse(?:down|up|over|move|out))$/
-    }
+    };
     var defaultOptions = {
         pointerX: 0,
         pointerY: 0,
@@ -24,7 +24,7 @@
         metaKey: false,
         bubbles: true,
         cancelable: true
-    }
+    };
 
     Event.simulate = function(element, eventName) {
         var options = Object.extend(defaultOptions, arguments[2] || { });
@@ -61,4 +61,4 @@
     }
 
     Element.addMethods({ simulate: Event.simulate });
-})()
+})();

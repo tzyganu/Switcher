@@ -1,0 +1,28 @@
+{
+    "name":"tzyganu/Switcher",
+    "type":"magento-module",
+    "require":{
+        "magento-hackathon/magento-composer-installer":"*"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/tzyganu/Switcher"
+        }
+    ],
+	"licence": "mit",
+    "extra":{
+        "map":[
+            ["app/etc/modules/Easylife_Switcher.xml", "app/etc/modules/Easylife_Switcher.xml"],
+            ["app/code/community/Easylife/Switcher", "app/code/community/Easylife/Switcher"],
+            ["app/locale/en_US/Easylife_Switcher.csv", "app/locale/en_US/Easylife_Switcher.csv"],
+            ["app/design/adminhtml/default/default/layout/easylife_switcher.xml", "app/design/adminhtml/default/default/layout/easylife_switcher.xml"],
+            ["app/design/adminhtml/default/default/template/easylife_switcher", "app/design/adminhtml/default/default/template/easylife_switcher"],
+            ["app/design/frontend/base/default/layout/easylife_switcher.xml", "app/design/frontend/base/default/layout/easylife_switcher.xml"],
+            ["app/design/frontend/base/default/template/easylife_switcher", "app/design/frontend/base/default/template/easylife_switcher"],
+            ["js/easylife_switcher", "js/easylife_switcher"],
+            ["skin/frontend/base/default/css/easylife_switcher", "skin/frontend/base/default/css/easylife_switcher"],
+            ["skin/frontend/base/default/images/easylife_switcher", "skin/frontend/base/default/images/easylife_switcher"]
+        ]
+    }
+}

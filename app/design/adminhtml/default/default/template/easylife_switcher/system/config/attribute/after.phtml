@@ -11,19 +11,12 @@
  *
  * @category   	Easylife
  * @package	    Easylife_Switcher
- * @copyright   Copyright (c) 2013
+ * @copyright   2013 - 2014 Marius Strajeru
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
-class Easylife_Switcher_Model_Resource_Hashcode_Collection
-    extends Mage_Core_Model_Resource_Db_Collection_Abstract {
-    /**
-     * constructor
-     * @access public
-     * @return void
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
-     */
-    public function _construct() {
-        parent::_construct();
-        $this->_init('easylife_switcher/hashcode');
-    }
-}
+/** @var Easylife_Switcher_Block_Adminhtml_System_Attribute_After_Options $this*/
+echo $this->getButton();
+?>
+<div>
+    <input class="real-value"<?php echo ($this->getDisabled() ? ' disabled="disabled"' : '');?> type="hidden" name="<?php echo $this->getInputName();?>" id="<?php echo $this->getInputId();?>" value="<?php echo $this->getInputValue()?>" />
+</div>

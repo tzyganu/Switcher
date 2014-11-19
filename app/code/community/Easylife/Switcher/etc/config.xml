@@ -12,14 +12,14 @@
 *
 * @category   	Easylife
 * @package	    Easylife_Switcher
-* @copyright   Copyright (c) 2013
+* @copyright   2013 - 2014 Marius Strajeru
 * @license	    http://opensource.org/licenses/mit-license.php MIT License
 */
 -->
 <config>
     <modules>
         <Easylife_Switcher>
-            <version>1.2.1</version>
+            <version>2.0.0</version>
         </Easylife_Switcher>
     </modules>
     <global>
@@ -41,7 +41,7 @@
             <easylife_switcher_resource>
                 <class>Easylife_Switcher_Model_Resource</class>
                 <entities>
-                    <hashcode>
+                    <hashcode><!-- left here for backwards compatibility - not used since 2.0.0 -->
                         <table>easylife_switcher_hascode</table>
                     </hashcode>
                 </entities>
@@ -51,7 +51,7 @@
             <easylife_switcher_setup>
                 <setup>
                     <module>Easylife_Switcher</module>
-                    <class>Mage_Catalog_Model_Resource_Setup</class>
+                    <class>Easylife_Switcher_Model_Resource_Setup</class>
                 </setup>
             </easylife_switcher_setup>
         </resources>
@@ -109,43 +109,38 @@
                     </easylife_switcher>
                 </observers>
             </core_block_abstract_to_html_before>
-            <!-- Save images associated with attribute options -->
-            <controller_action_postdispatch_adminhtml_catalog_product_attribute_save>
-                <observers>
-                    <easylife_switcher>
-                        <class>easylife_switcher/optimage</class>
-                        <method>uploadAndSaveImages</method>
-                    </easylife_switcher>
-                </observers>
-            </controller_action_postdispatch_adminhtml_catalog_product_attribute_save>
+
             <adminhtml_cache_flush_all>
                 <observers>
                     <easylife_switcher>
-                        <class>easylife_switcher/optimage</class>
+                        <class>easylife_switcher/observer</class>
                         <method>cleanOptImages</method>
                     </easylife_switcher>
                 </observers>
             </adminhtml_cache_flush_all>
+
             <adminhtml_cache_flush_system>
                 <observers>
                     <easylife_switcher>
-                        <class>easylife_switcher/optimage</class>
+                        <class>easylife_switcher/observer</class>
                         <method>cleanOptImages</method>
                     </easylife_switcher>
                 </observers>
             </adminhtml_cache_flush_system>
+
             <clean_media_cache_after>
                 <observers>
                     <easylife_switcher>
-                        <class>easylife_switcher/optimage</class>
+                        <class>easylife_switcher/observer</class>
                         <method>cleanOptImages</method>
                     </easylife_switcher>
                 </observers>
             </clean_media_cache_after>
+
             <clean_catalog_images_cache_after>
                 <observers>
                     <easylife_switcher>
-                        <class>easylife_switcher/optimage</class>
+                        <class>easylife_switcher/observer</class>
                         <method>cleanOptImages</method>
                     </easylife_switcher>
                 </observers>
@@ -161,6 +156,17 @@
             </modules>
         </translate>
     </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Easylife_Switcher before="Mage_Adminhtml">Easylife_Switcher_Adminhtml</Easylife_Switcher>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <default>
         <easylife_switcher>
             <settings>
@@ -186,4 +192,28 @@
             </settings>
         </easylife_switcher>
     </default>
+    <easylife_switcher>
+        <system>
+            <transform>
+                <none tranlsate="label" module="easylife_switcher">
+                    <label>No transformation</label>
+                </none>
+                <labels tranlsate="label" module="easylife_switcher">
+                    <label>Labels</label>
+                </labels>
+                <product_images tranlsate="label" module="easylife_switcher">
+                    <label>Simple product images</label>
+                    <after_block>easylife_switcher/adminhtml_system_attribute_after_product_image</after_block>
+                </product_images>
+                <colors tranlsate="label" module="easylife_switcher">
+                    <label>Colors</label>
+                    <after_block>easylife_switcher/adminhtml_system_attribute_after_color</after_block>
+                </colors>
+                <custom_images tranlsate="label" module="easylife_switcher">
+                    <label>Custom images</label>
+                    <after_block>easylife_switcher/adminhtml_system_attribute_after_image</after_block>
+                </custom_images>
+            </transform>
+        </system>
+    </easylife_switcher>
 </config>

@@ -1,0 +1,50 @@
+<?php
+/**
+ * Easylife_Switcher extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MIT License
+ * that is bundled with this package in the file LICENSE_EASYLIFE_SWITCHER.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category   	Easylife
+ * @package	    Easylife_Switcher
+ * @copyright   2013 - 2014 Marius Strajeru
+ * @license	    http://opensource.org/licenses/mit-license.php MIT License
+ */
+/**
+ * moved dependency here because the default dependency does not play well with custom config elements
+ */
+?>
+<script type="text/javascript">
+    var easylifeSwitcherDependencyModel = Class.create();
+    easylifeSwitcherDependencyModel.prototype = {
+        initialize : function()
+        {
+            this.enabled = $('easylife_switcher_settings_enabled');
+            this.configElement = $('easylife_switcher_settings_transform');
+            if (this.enabled) {
+                this.refreshEnabledSelect();
+                this.bindEnabledChange();
+            }
+        },
+        bindEnabledChange : function()
+        {
+            Event.observe(this.enabled, 'change', this.refreshEnabledSelect.bind(this));
+        },
+        refreshEnabledSelect : function(elem)
+        {
+            if (this.enabled.value == 0 || this.enabled.value == '') {
+                this.configElement.up(1).hide();
+            }
+            else{
+                this.configElement.up(1).show();
+            }
+        }
+    }
+    document.observe("dom:loaded", function() {
+        var easylifeSwitcherDependencyInstance = new easylifeSwitcherDependencyModel();
+    });
+</script>

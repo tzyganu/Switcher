@@ -12,7 +12,7 @@
  *
  * @category   	Easylife
  * @package	    Easylife_Switcher
- * @copyright   Copyright (c) 2013
+ * @copyright   2013 - 2014 Marius Strajeru
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
 /**
@@ -20,7 +20,6 @@
  *
  * @category    Easylife
  * @package	    Easylife_Switcher
- * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
  */
  -->
 <layout>
@@ -40,10 +39,15 @@
     <adminhtml_catalog_product_new>
         <update handle="easylife_switcher_handle" />
     </adminhtml_catalog_product_new>
-    <adminhtml_catalog_product_attribute_edit>
-        <reference name="attribute_edit_tabs">
-            <block type="easylife_switcher/adminhtml_catalog_product_attribute_edit_tab_optimage" name="tab_optimage" template="easylife_switcher/optimage.phtml" />
-            <action method="addTabAfter"><name>opt_images</name><block>tab_optimage</block><after>labels</after></action>
+
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <block type="easylife_switcher/adminhtml_system_head" name="easylife_switcher.head" as="easylife_switcher_head">
+                <action method="addResourcesToParent" />
+            </block>
         </reference>
-    </adminhtml_catalog_product_attribute_edit>
+        <reference name="content">
+            <block type="easylife_switcher/adminhtml_system_dependency" name="easylife_switcher.dependency" as="easylife_switcher.dependency" after="" />
+        </reference>
+    </adminhtml_system_config_edit>
 </layout>

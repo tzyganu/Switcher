@@ -11,7 +11,7 @@
  *
  * @category   	Easylife
  * @package	    Easylife_Switcher
- * @copyright   Copyright (c) 2013
+ * @copyright   2013 - 2014 Marius Strajeru
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
 /**
@@ -19,10 +19,13 @@
  *
  * @category    Easylife
  * @package	    Easylife_Switcher
- * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
  */
 ?>
-<?php if (Mage::helper('easylife_switcher')->isEnabled()) : ?>
+<?php
+    /** @var Easylife_Switcher_Helper_Data $helper */
+    $helper = Mage::helper('easylife_switcher');
+?>
+<?php if ($helper->isEnabledAdmin()) : ?>
 <script type="text/javascript">
 //<![CDATA[
     if (typeof superProduct != 'undefined'){
@@ -30,11 +33,19 @@
         var createNormalUrl = superProduct.createNormalUrl;
         var createQuickUrl = superProduct.createQuickUrl;
         var links = superProduct.links;
-
-        superProduct = new Easylife.Switcher(superProduct.attributes, links, superProduct.idPrefix, superProduct.grid, superProduct.readonly, '<?php echo Easylife_Switcher_Helper_Data::DEFAULT_CONFIGURATION_ATTRIBUTE_CODE?>')
-        superProduct.createEmptyUrl = createEmptyUrl;
-        superProduct.createNormalUrl = createNormalUrl;
-        superProduct.createQuickUrl = createQuickUrl;
+        //document.observe("dom:loaded", function() {
+            superProduct = new Easylife.Switcher(
+                superProduct.attributes,
+                links,
+                superProduct.idPrefix,
+                superProduct.grid,
+                superProduct.readonly,
+                '<?php echo Easylife_Switcher_Helper_Data::DEFAULT_CONFIGURATION_ATTRIBUTE_CODE?>'
+            );
+            superProduct.createEmptyUrl = createEmptyUrl;
+            superProduct.createNormalUrl = createNormalUrl;
+            superProduct.createQuickUrl = createQuickUrl;
+        //});
     }
 //]]>
 </script>

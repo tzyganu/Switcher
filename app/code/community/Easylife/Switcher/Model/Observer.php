@@ -11,7 +11,7 @@
  *
  * @category   	Easylife
  * @package	    Easylife_Switcher
- * @copyright   Copyright (c) 2013
+ * @copyright   2013 - 2014 Marius Strajeru
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
 /**
@@ -19,28 +19,45 @@
  *
  * @category    Easylife
  * @package	    Easylife_Switcher
- * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
  */
-class Easylife_Switcher_Model_Observer{
+class Easylife_Switcher_Model_Observer
+{
     /**
      * config path to show out of stock configurations
      */
     const XML_SHOW_OUT_OF_STOCK_PATH = 'easylife_switcher/settings/out_of_stock';
 
     /**
+     * @return Mage_Catalog_Helper_Product
+     */
+    protected function _getCatalogHelper()
+    {
+        return Mage::helper('catalog/product');
+    }
+
+    /**
+     * @return Easylife_Switcher_Helper_Data
+     */
+    protected function _getSwitcherHelper()
+    {
+        return Mage::helper('easylife_switcher');
+    }
+    /**
      * tell Magento to load out of stock products also
      * @access public
      * @param Varien_Event_Observer $observer
      * @return Easylife_Switcher_Model_Observer
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function checkShowStock(Varien_Event_Observer $observer){
-        if (Mage::helper('easylife_switcher')->isEnabled()){
+    public function checkShowStock(Varien_Event_Observer $observer)
+    {
+        if ($this->_getSwitcherHelper()->isEnabled()) {
             /** @var Mage_Catalog_Model_Product $product */
             $product = $observer->getEvent()->getProduct();
             if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE) {
-                Mage::register('old_skip_aleable_check', Mage::helper('catalog/product')->getSkipSaleableCheck());
-                Mage::helper('catalog/product')->setSkipSaleableCheck(Mage::getStoreConfigFlag(self::XML_SHOW_OUT_OF_STOCK_PATH));
+                Mage::register('old_skip_aleable_check', $this->_getCatalogHelper()->getSkipSaleableCheck());
+                $this->_getCatalogHelper()->setSkipSaleableCheck(
+                    Mage::getStoreConfigFlag(self::XML_SHOW_OUT_OF_STOCK_PATH)
+                );
             }
         }
         return $this;
@@ -51,12 +68,14 @@ class Easylife_Switcher_Model_Observer{
      * @access public
      * @param Varien_Event_Observer $observer
      * @return Easylife_Switcher_Model_Observer
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function checkShowStockOnConfigure(Varien_Event_Observer $observer) {
-        if (Mage::helper('easylife_switcher')->isEnabled()){
-            Mage::register('old_skip_aleable_check', Mage::helper('catalog/product')->getSkipSaleableCheck());
-            Mage::helper('catalog/product')->setSkipSaleableCheck(Mage::getStoreConfigFlag(self::XML_SHOW_OUT_OF_STOCK_PATH));
+    public function checkShowStockOnConfigure(Varien_Event_Observer $observer)
+    {
+        if ($this->_getSwitcherHelper()->isEnabled()) {
+            Mage::register('old_skip_aleable_check', $this->_getCatalogHelper()->getSkipSaleableCheck());
+            $this->_getCatalogHelper()->setSkipSaleableCheck(
+                Mage::getStoreConfigFlag(self::XML_SHOW_OUT_OF_STOCK_PATH)
+            );
         }
         return $this;
     }
@@ -66,25 +85,31 @@ class Easylife_Switcher_Model_Observer{
      * @access public
      * @param Varien_Event_Observer $observer
      * @return Easylife_Switcher_Model_Observer
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function addDefaultColumn(Varien_Event_Observer $observer){
+    public function addDefaultColumn(Varien_Event_Observer $observer)
+    {
         $block = $observer->getEvent()->getBlock();
-        if ($block instanceof Mage_Adminhtml_Block_Catalog_Product_Edit_Tab_Super_Config_Grid){
-            if (Mage::helper('easylife_switcher')->isEnabled()){
+        if ($block instanceof Mage_Adminhtml_Block_Catalog_Product_Edit_Tab_Super_Config_Grid) {
+            /** @var Easylife_Switcher_Helper_Data $helper */
+            $helper = Mage::helper('easylife_switcher');
+            if ($helper->isEnabledAdmin()) {
                 if (!$block->isReadonly()) {
-                    $block->addColumnAfter('default_combination', array(
-                        'header'     => Mage::helper('easylife_switcher')->__('Default'),
-                        'header_css_class' => 'a-center',
-                        'type'      => 'radio',
-                        'name'      => 'default_combination',
-                        'values'    => $this->_getDefaultConfigurationId(),
-                        'align'     => 'center',
-                        'index'     => 'entity_id',
-                        'html_name' => 'default_combination',
-                        'sortable'  => false,
-                        'filter'    => false
-                    ), 'in_products');
+                    $block->addColumnAfter(
+                        'default_combination',
+                        array(
+                            'header'     => Mage::helper('easylife_switcher')->__('Default'),
+                            'header_css_class' => 'a-center',
+                            'type'      => 'radio',
+                            'name'      => 'default_combination',
+                            'values'    => $this->_getDefaultConfigurationId(),
+                            'align'     => 'center',
+                            'index'     => 'entity_id',
+                            'html_name' => 'default_combination',
+                            'sortable'  => false,
+                            'filter'    => 'Easylife_Switcher_Block_Adminhtml_Grid_Filter_Switcher',
+                        ),
+                        'in_products'
+                    );
                 }
             }
         }
@@ -95,13 +120,29 @@ class Easylife_Switcher_Model_Observer{
      * get the default configuration
      * @access protected
      * @return array|string
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    protected function _getDefaultConfigurationId(){
+    protected function _getDefaultConfigurationId()
+    {
+        /** @var Mage_Catalog_Model_Product $product */
         $product = Mage::registry('current_product');
-        if ($product){
+        if ($product) {
             return array($product->getData(Easylife_Switcher_Helper_Data::DEFAULT_CONFIGURATION_ATTRIBUTE_CODE));
         }
         return '';
+    }
+
+    /**
+     * Clean generated thumbs for attribute option images
+     * @access public
+     * @param $observer
+     * @return null
+     */
+
+    public function cleanOptImages($observer)
+    {
+        /** @var Easylife_Switcher_Helper_Optimage $helper */
+        $helper = Mage::helper('easylife_switcher/optimage');
+        $helper->cleanCache();
+        return $this;
     }
 }

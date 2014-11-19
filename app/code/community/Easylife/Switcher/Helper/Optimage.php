@@ -11,7 +11,7 @@
  *
  * @category    Easylife
  * @package     Easylife_Switcher
- * @copyright   Copyright (c) 2013-2014
+ * @copyright   2013 - 2014 Marius Strajeru-2014
  * @license     http://opensource.org/licenses/mit-license.php MIT License
  */
 
@@ -20,13 +20,10 @@
  *
  * @category    Easylife
  * @package     Easylife_Switcher
- * @author      Emil [carco] Sirbu <emil.sirbu@gmail.com>
- *
  */
 
-class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
-
-
+class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data
+{
      /**
      * config path to transform dropdowns
      */
@@ -37,25 +34,10 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
      */
     const XML_USE_OPTION_IMAGES_PATH= 'easylife_switcher/settings/use_option_images';
 
-    /**
-     * check attributes which use option images
-     * @access public
-     * @return array
-     * @author Emil [carco] Sirbu <emil.sirbu@gmail.com>
-     */
-    public function getColorImageAttributes()
-    {
-        if(!$this->isEnabled() || !Mage::getStoreConfigFlag(self::XML_TRANSFORM_PATH)) {
-            return array();
-        }
-        $attributes = trim(trim(Mage::getStoreConfig(self::XML_USE_OPTION_IMAGES_PATH)),' ;,');
-        return preg_split("#\s*[ ,;]\s*#", $attributes, null, PREG_SPLIT_NO_EMPTY);
-    }
-
-
     /*  IMAGE RESIZE HELPER */
 
-    protected $_placeholder = '/images/easylife_switcher/no-optimage.gif'; //image placeholder @var string, located in skin directory
+    //image placeholder @var string, located in skin directory
+    protected $_placeholder = '/images/easylife_switcher/no-optimage.gif';
     protected $_subdir      = 'optimages';
 
 
@@ -94,7 +76,8 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
     protected $_resizeFolderName = 'cache';
 
 
-    public function getImageBaseDir(){
+    public function getImageBaseDir()
+    {
         return Mage::getBaseDir('media').DS.$this->_subdir;
     }
     /**
@@ -103,22 +86,20 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
      * @return string
      *
      */
-    public function getImageBaseUrl(){
+    public function getImageBaseUrl()
+    {
         return Mage::getBaseUrl('media').$this->_subdir;
     }
 
     /**
-     * init image
-     * @access public
-     * @param Varien_Object $object
-     * @param string $imageField
-     * @return Easylife_Switcher_Helper_Optimage
-     *
+     * @param $image
+     * @return $this
      */
-    public function init(Varien_Object $object, $imageField = 'image'){
+    public function init($image)
+    {
 
         $this->_imageProcessor  = null;
-        $this->_image           = ltrim($object->getDataUsingMethod($imageField),'/\ ');
+        $this->_image           = ltrim($image, '/\ ');
         $this->_absImage        = null;
         $this->_widht           = null;
         $this->_height          = null;
@@ -130,26 +111,30 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
 
         $checkImages = array();
 
-        if($this->_image) {
+        if ($this->_image) {
             $this->_image = DS.$this->_image;
             $checkImages[$this->_image] = $this->getImageBaseDir().$this->_image;
         };
 
-        $_placeholder = DS.ltrim($this->_placeholder,' \/');
-        $checkImages[$_placeholder] = array_unique(array(
-            Mage::getDesign()->getSkinBaseDir().$_placeholder,
-            Mage::getDesign()->getSkinBaseDir(array('_theme' => 'default')).$_placeholder,
-            Mage::getDesign()->getSkinBaseDir(array('_theme' => 'default', '_package' => 'base')).$_placeholder
-        ));
+        $_placeholder = DS.ltrim($this->_placeholder, ' \/');
+        $checkImages[$_placeholder] = array_unique(
+            array(
+                Mage::getDesign()->getSkinBaseDir().$_placeholder,
+                Mage::getDesign()->getSkinBaseDir(array('_theme' => 'default')).$_placeholder,
+                Mage::getDesign()->getSkinBaseDir(array('_theme' => 'default', '_package' => 'base')).$_placeholder
+            )
+        );
 
         $_mediaPlaceholder = DS.basename($_placeholder);
         $checkImages[$_mediaPlaceholder] = $this->getImageBaseDir().$_mediaPlaceholder;
 
 
-        foreach($checkImages as $_image=>$_absImages) {
-            if(!is_array($_absImages)) $_absImages = array($_absImages);
-            foreach($_absImages as $_absImage) {
-                if(file_exists($_absImage)) {
+        foreach ($checkImages as $_image=>$_absImages) {
+            if (!is_array($_absImages)) {
+                $_absImages = array($_absImages);
+            }
+            foreach ($_absImages as $_absImage) {
+                if (file_exists($_absImage)) {
                     $this->_image       = $_image;
                     $this->_absImage    = $_absImage;
                     break 2; //break both foreach
@@ -157,7 +142,7 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
             }
         }
 
-        if($this->_absImage) {
+        if ($this->_absImage) {
             try{
                 $this->_getImageProcessor()->open($this->_absImage);
             } catch (Exception $e){
@@ -176,7 +161,8 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
      * @return Varien_Image_Adapter_Gd2
      *
      */
-    protected function _getImageProcessor() {
+    protected function _getImageProcessor()
+    {
         if (is_null($this->_imageProcessor)) {
             $this->_imageProcessor = Varien_Image_Adapter::factory('GD2');
             $this->_imageProcessor->keepFrame($this->_keepFrame);
@@ -188,7 +174,7 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
     }
 
 
-   /**
+    /**
      * Get/set keepAspectRatio
      *
      * @param bool $value
@@ -238,7 +224,7 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
     }
 
 
-   /**
+    /**
      * Get/set adaptiveResize
      *
      * @param bool|string $value
@@ -248,7 +234,7 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
     {
         if (null !== $value) {
             $this->_adaptiveResize = $value;
-            if($value) {
+            if ($value) {
                 $this->keepFrame(false);
             }
             return $this;
@@ -265,7 +251,7 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
      */
     public function constrainOnly($value = null)
     {
-       if (null !== $value) {
+        if (null !== $value) {
             $this->_getImageProcessor()->constrainOnly($value);
             return $this;
         } else {
@@ -281,7 +267,7 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
      */
     public function quality($value = null)
     {
-      if (null !== $value) {
+        if (null !== $value) {
             $this->_getImageProcessor()->quality($value);
             return $this;
         } else {
@@ -297,16 +283,13 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
      */
     public function backgroundColor($value = null)
     {
-    if (null !== $value) {
+        if (null !== $value) {
             $this->_getImageProcessor()-> backgroundColor($value);
             return $this;
         } else {
             return $this->_getImageProcessor()-> backgroundColor();
         }
     }
-
-
-
 
     /**
      * resize image
@@ -316,7 +299,8 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
      * @return $this
      *
      */
-    public function resize($width = null, $height = null) {
+    public function resize($width = null, $height = null)
+    {
         $this->_scheduledResize = true;
         $this->_width  = $width;
         $this->_height = $height;
@@ -324,16 +308,15 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
     }
 
 
-    protected function getDestinationImagePrefix() {
-
-        if(!$this->_image) {
+    protected function getDestinationImagePrefix()
+    {
+        if (!$this->_image) {
             return $this;
         }
 
         $imageRealPath = "";
 
-        if($this->_scheduledResize) {
-
+        if ($this->_scheduledResize) {
             $width  = $this->_width;
             $height = $this->_height;
 
@@ -346,81 +329,91 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
 
             $options = "";
 
-            if(!$keepAspectRatio) {
+            if (!$keepAspectRatio) {
                 $imageRealPath .= '-exact';
             } else {
-                if(!$keepFrame && $width && $height && ($adaptive !== false)) {
+                if (!$keepFrame && $width && $height && ($adaptive !== false)) {
                     $adaptive = strtolower(trim($adaptive));
-                    if(isset($this->_adaptiveResizePositions[$adaptive])) {
+                    if (isset($this->_adaptiveResizePositions[$adaptive])) {
                         $imageRealPath .= '-'.$adaptive;
                     }
                 }
             }
-            if($keepFrame) {
+            if ($keepFrame) {
                 $imageRealPath .= '-frame';
                 $_backgroundColor = $this->backgroundColor();
-                if($_backgroundColor) {
-                    $imageRealPath .= '-'.implode('-',$_backgroundColor);
+                if ($_backgroundColor) {
+                    $imageRealPath .= '-'.implode('-', $_backgroundColor);
                 }
             }
-            if(!$constrainOnly) {
+            if (!$constrainOnly) {
                 $imageRealPath .= '-zoom';
             }
         }
         return $imageRealPath;
     }
 
+    /**
+     * @return $this|string
+     */
+    protected function getDestinationPath()
+    {
+        if (!$this->_image) {
+            return $this;
+        }
+        if ($this->_scheduledResize) {
+            return $this->getImageBaseDir().DS.
+                $this->_resizeFolderName.DS.
+                $this->getDestinationImagePrefix().
+                $this->_image;
+        } else {
+            return $this->getImageBaseDir().$this->_image;
+        }
+    }
 
-   protected function getDestinationPath() {
-       if(!$this->_image) {
-           return $this;
-       }
-       if($this->_scheduledResize) {
-           return $this->getImageBaseDir().DS.$this->_resizeFolderName.DS.$this->getDestinationImagePrefix().$this->_image;
-       } else {
-           return $this->getImageBaseDir().$this->_image;
-       }
-   }
-
-   protected function getImageUrl() {
-
-       if(!$this->_image) {
-           return $this;
-       }
-
-       if($this->_scheduledResize) {
-           $imageUrl = $this->getImageBaseUrl().'/'.$this->_resizeFolderName.'/'.$this->getDestinationImagePrefix().$this->_image;
-       } else {
-          $imageUrl = $this->getImageBaseUrl().$this->_image;
-       }
-       return str_replace(DS, '/', $imageUrl);
-   }
-
-    protected function _doResize() {
-
-        if(!$this->_image || !$this->_scheduledResize || $this->_resized) {
+    protected function getImageUrl()
+    {
+        if (!$this->_image) {
             return $this;
         }
 
+        if ($this->_scheduledResize) {
+            $imageUrl = $this->getImageBaseUrl().'/'.
+                $this->_resizeFolderName.'/'.
+                $this->getDestinationImagePrefix().
+                $this->_image;
+        } else {
+           $imageUrl = $this->getImageBaseUrl().$this->_image;
+        }
+        return str_replace(DS, '/', $imageUrl);
+    }
+
+    protected function _doResize()
+    {
+
+        if (!$this->_image || !$this->_scheduledResize || $this->_resized) {
+            return $this;
+        }
         $this->_resized = true; //mark as resized
-
-
-
         $width = $this->_width;
         $height = $this->_height;
 
-        $adaptive = $width && $height && $this->keepAspectRatio() && !$this->keepFrame() && ($this->adaptiveResize() !== false);
+        $adaptive = $width &&
+            $height &&
+            $this->keepAspectRatio() &&
+            !$this->keepFrame() &&
+            ($this->adaptiveResize() !== false);
         $adaptivePosition = false;
-        if($adaptive) {
+        if ($adaptive) {
             $adaptive = strtolower(trim($this->adaptiveResize()));
-            if(isset($this->_adaptiveResizePositions[$adaptive])) {
+            if (isset($this->_adaptiveResizePositions[$adaptive])) {
                 $adaptivePosition = $this->_adaptiveResizePositions[$adaptive];
             }
         }
 
         $processor = $this->_getImageProcessor();
 
-        if(!$adaptivePosition) {
+        if (!$adaptivePosition) {
             $processor->resize($width, $height);
             return $this;
         }
@@ -438,8 +431,7 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
         $diffWidth  = $processor->getOriginalWidth() - $width;
         $diffHeight = $processor->getOriginalHeight() - $height;
 
-        if($diffWidth || $diffHeight) {
-
+        if ($diffWidth || $diffHeight) {
             $processor->crop(
                 floor($diffHeight * $adaptivePosition[0]), //top rate
                 floor($diffWidth / 2),
@@ -452,10 +444,10 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
 
     }
 
-    public function cleanCache() {
-
+    public function cleanCache()
+    {
         $directory =  $this->getImageBaseDir().DS.$this->_resizeFolderName;
-        if(is_dir($directory)) {
+        if (is_dir($directory)) {
             $io = new Varien_Io_File();
             $io->rmdir($directory, true);
         }
@@ -467,10 +459,10 @@ class Easylife_Switcher_Helper_Optimage extends Easylife_Switcher_Helper_Data {
      * @return string
      *
      */
-    public function __toString(){
-
-        try{
-            if(!$this->_image) {
+    public function __toString()
+    {
+        try {
+            if (!$this->_image) {
                 throw new Exception($this->_openError);
             }
 
@@ -493,10 +485,4 @@ CkjUgNcGZsJ6kpolDZrz6F2ZUsalEFcbPAAAAAElFTkSuQmCC';
         }
 
     }
-
-
-
-
-
-
 }

@@ -1,7 +1,9 @@
 Easylife Switcher
 ========
 
-Configurable products switcher v1.2.1
+**This description is outdated. I will update it soon**
+
+Configurable products switcher v2.0.0
 
 **Release Notes 1.2.1 - 2014-11-05**
 

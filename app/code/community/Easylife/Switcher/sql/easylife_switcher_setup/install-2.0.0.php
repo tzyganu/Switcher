@@ -33,7 +33,7 @@ $this->addAttribute(
         'label'             => 'Default configuration id',
         'class'             => '',
         'source'            => '',
-        'global'            => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_GLOBAL,
+        'global'            => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_STORE,
         'visible'           => true,
         'required'          => false,
         'user_defined'      => true,

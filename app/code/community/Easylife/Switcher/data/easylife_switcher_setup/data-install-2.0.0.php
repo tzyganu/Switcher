@@ -34,9 +34,9 @@ ProductMediaManager.createZoom(jQuery(\'#image-main\'));ProductMediaManager.init
         'easylife_switcher/settings/media_selector' => '$$(\'.product-view .product-img-box\')[0]',
     );
     foreach ($configSettings as $path=>$value) {
+        /** @var Mage_Core_Model_Config_Data $config */
         $config = Mage::getModel('core/config_data')->load($path, 'path');
         $config->setValue($value)->setPath($path);
         $config->save();
     }
 }
-

@@ -10,7 +10,7 @@
  *
  * @category   	Easylife
  * @package	    Easylife_Switcher
- * @copyright   Copyright (c) 2013
+ * @copyright   2013 - 2014 Marius Strajeru
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
 /**
@@ -18,7 +18,6 @@
  *
  * @category    Easylife
  * @package	    Easylife_Switcher
- * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
  */
 if(typeof Easylife=='undefined') {
     var Easylife = {};
@@ -35,41 +34,93 @@ Easylife.Switcher = Class.create(Product.Configurable, {
      * @param grid
      * @param readonly
      * @param defaultConfigurationElement
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     initialize: function($super, attributes, links, idPrefix, grid, readonly, defaultConfigurationElement){
+        var that = this;
         this.canCreateAttributes = false;
         this.defaultConfigurationElement = defaultConfigurationElement;
         $super(attributes, links, idPrefix, grid, readonly);
         this.canCreateAttributes = true;
+        if ($(defaultConfigurationElement + '_default')) {
+            this.defaultConfigurationElementInherit = $(defaultConfigurationElement + '_default');
+            //move the element outside the grid
+            //kind of hacky but I don't want to rewrite 2 more blocks and a new js class
+            $(this.defaultConfigurationElementInherit).up().show();
+            $('super_product_links').insert({
+                after: $(this.defaultConfigurationElementInherit).up()
+            })
+        }
+        else {
+            this.defaultConfigurationElementInherit = false;
+        }
+        this.bindInherit();
+    },
+    /**
+     * bind inherit click for store views
+     */
+    bindInherit: function() {
+        var that = this;
+        if (this.defaultConfigurationElementInherit) {
+            $(this.defaultConfigurationElementInherit).observe('change', function() {
+                that.checkInherit();
+            });
+            this.checkInherit();
+        }
+    },
+    /**
+     * check inherit
+     */
+    checkInherit: function() {
+        toggleValueElements(
+            $(this.defaultConfigurationElementInherit),
+            $(this.defaultConfigurationElement).parentNode.parentNode
+        );
+        var checked = $(this.defaultConfigurationElementInherit).checked;
+        $$('#super_product_links_table input[name="default_combination"]').each(function(elem) {
+            if (checked) {
+                $(elem).disabled = checked;
+            }
+            else {
+                //check if the checkbox near the radio is checked
+                var tr = $(elem).up(1);
+                var checkbox = $(tr).down('input[type=checkbox]');
+                if (checkbox.checked) {
+                    $(elem).disabled = checked;
+                }
+            }
+        })
     },
     /**
      * rewrite rowInit to support click on the 'default config' radio
      * @param $super
      * @param grid
      * @param row
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     rowInit : function($super, grid, row) {
         $super(grid, row);
         var checkbox = $(row).down('.checkbox');
         var input = $(row).down('.value-json');
-        var radio = $(row).down('.radio')
+        var radio = $(row).down('.radio');
         if (checkbox && input) {
             if (checkbox.disabled == true || checkbox.checked == false){
                 radio.disable();
                 radio.checked = false;
                 this.clearDefaultConfiguration(radio.value);
-            }
-            else{
-                radio.enable();
+            } else{
+                if (!this.defaultConfigurationElementInherit || !$(this.defaultConfigurationElementInherit).checked) {
+                    if (radio.value == $(this.defaultConfigurationElement).value) {
+                        radio.checked = 'checked';
+                    }
+                    radio.enable();
+                } else {
+                    radio.disable();
+                }
             }
         }
     },
     /**
      * rewrite createAttributes so it won't run twice
      * @param $super
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     createAttributes: function($super){
         if (this.canCreateAttributes){
@@ -81,7 +132,6 @@ Easylife.Switcher = Class.create(Product.Configurable, {
      * @param $super
      * @param grid
      * @param event
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     rowClick : function($super, grid, event) {
         $super(grid, event);
@@ -97,9 +147,7 @@ Easylife.Switcher = Class.create(Product.Configurable, {
         }
         if (trElement) {
             var checkbox = $(trElement).down('input[type=checkbox]');
-            console.log(checkbox);
             var radio = $(trElement).down('input[type=radio]');
-            console.log(radio);
             if (checkbox){
                 if (checkbox.disabled == true || checkbox.checked == false){
                     radio.disable();
@@ -107,7 +155,12 @@ Easylife.Switcher = Class.create(Product.Configurable, {
                     this.clearDefaultConfiguration(radio.value);
                 }
                 else{
-                    radio.enable();
+                    if (!this.defaultConfigurationElementInherit || !$(this.defaultConfigurationElementInherit).checked) {
+                        radio.enable();
+                    }
+                    else {
+                        radio.disable();
+                    }
                 }
             }
         }
@@ -115,7 +168,6 @@ Easylife.Switcher = Class.create(Product.Configurable, {
     /**
      * clear default configuration
      * @param value
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
     clearDefaultConfiguration: function(value){
         if (value == $(this.defaultConfigurationElement).value){

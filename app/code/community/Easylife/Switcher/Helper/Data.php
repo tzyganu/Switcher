@@ -11,7 +11,7 @@
  *
  * @category   	Easylife
  * @package	    Easylife_Switcher
- * @copyright   Copyright (c) 2013
+ * @copyright   2013 - 2014 Marius Strajeru
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
 /**
@@ -19,9 +19,9 @@
  *
  * @category    Easylife
  * @package	    Easylife_Switcher
- * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
  */
-class Easylife_Switcher_Helper_Data extends Mage_Core_Helper_Abstract {
+class Easylife_Switcher_Helper_Data extends Mage_Core_Helper_Abstract
+{
     /**
      * config path to enabled flag
      */
@@ -35,9 +35,19 @@ class Easylife_Switcher_Helper_Data extends Mage_Core_Helper_Abstract {
      * check if the module is enabled
      * @access public
      * @return bool
-     * @author Marius Strajeru <marius.strajeru@gmail.com>
      */
-    public function isEnabled(){
+    public function isEnabled()
+    {
         return Mage::getStoreConfigFlag(self::XML_ENABLED_PATH);
+    }
+
+    /**
+     * check if module is enabled in admin
+     * @return bool
+     */
+    public function isEnabledAdmin()
+    {
+        $store = Mage::app()->getRequest()->getParam('store', 0);
+        return Mage::getStoreConfigFlag(self::XML_ENABLED_PATH, $store);
     }
 }

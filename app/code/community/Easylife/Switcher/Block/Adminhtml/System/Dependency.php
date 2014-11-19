@@ -11,17 +11,13 @@
  *
  * @category   	Easylife
  * @package	    Easylife_Switcher
- * @copyright   Copyright (c) 2013
+ * @copyright   2013 - 2014 Marius Strajeru
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
-/**
- * Source model for available attributes
- *
- * @category    Easylife
- * @package	    Easylife_Switcher
- * @author 	    Marius Strajeru <marius.strajeru@gmail.com>
- */
-class Easylife_Switcher_Model_Adminhtml_System_Config_Source_AttributeIds
-    extends Easylife_Switcher_Model_Adminhtml_System_Config_Source_Attributes {
-    protected $_idKey = 'attribute_id';
+class Easylife_Switcher_Block_Adminhtml_System_Dependency extends Mage_Adminhtml_Block_Template
+{
+    /**
+     * @var string
+     */
+    protected $_template = 'easylife_switcher/system/dependency.phtml';
 }
