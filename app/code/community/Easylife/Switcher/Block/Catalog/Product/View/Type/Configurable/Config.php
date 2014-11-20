@@ -267,7 +267,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
         $config['switch_media']             = $this->getSwitchMedia();
         $config['switch_media_selector']    = Mage::getStoreConfig(self::XML_MEDIA_SELECTOR);
         $config['switch_media_callback']    = Mage::getStoreConfig(self::XML_MEDIA_CALLBACK_PATH);
-        $config['allow_no_stock_select']    = Mage::getStoreConfigFlag(self::XML_NO_STOCK_SELECT_PATH);
+        $config['allow_no_stock_select']    = $this->getAllowNoStockSelect();
         $config['keep_values']              = Mage::getStoreConfigFlag(self::XML_KEEP_SELECTED_VALUES);
 
         if (!$this->getProduct()->hasPreconfiguredValues()) {
@@ -283,6 +283,14 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
         return $this->getCoreHelper()->jsonEncode($config);
     }
 
+    /**
+     * @return bool
+     */
+    public function getAllowNoStockSelect()
+    {
+        return Mage::getStoreConfigFlag(self::XML_SHOW_OUT_OF_STOCK_PATH) &&
+            Mage::getStoreConfigFlag(self::XML_NO_STOCK_SELECT_PATH);
+    }
     /**
      * @return array
      */
@@ -407,8 +415,9 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
                 $default = false;
                 foreach ($simpleProducts as $product) {
                     /** @var Mage_Catalog_Model_Product $product */
-                    if ($product->getIsSalable()) {
+                    if ($product->getIsSalable() || $this->getAllowNoStockSelect()) {
                         $default = $product;
+                        break;
                     }
                 }
             } else {

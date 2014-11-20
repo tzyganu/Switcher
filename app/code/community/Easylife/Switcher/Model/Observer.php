@@ -64,23 +64,6 @@ class Easylife_Switcher_Model_Observer
     }
 
     /**
-     * tell Magento to load out of stock products also on cart configure page
-     * @access public
-     * @param Varien_Event_Observer $observer
-     * @return Easylife_Switcher_Model_Observer
-     */
-    public function checkShowStockOnConfigure(Varien_Event_Observer $observer)
-    {
-        if ($this->_getSwitcherHelper()->isEnabled()) {
-            Mage::register('old_skip_aleable_check', $this->_getCatalogHelper()->getSkipSaleableCheck());
-            $this->_getCatalogHelper()->setSkipSaleableCheck(
-                Mage::getStoreConfigFlag(self::XML_SHOW_OUT_OF_STOCK_PATH)
-            );
-        }
-        return $this;
-    }
-
-    /**
      * add column to simple products grid
      * @access public
      * @param Varien_Event_Observer $observer
