@@ -15,9 +15,7 @@
  * @license	    http://opensource.org/licenses/mit-license.php MIT License
  */
 /** @var Easylife_Switcher_Model_Resource_Setup $this */
-$table = $this->getTable('easylife_switcher/hashcode');
-//drop the hashcode table
-$this->run("DROP TABLE IF EXISTS `{$table}`");
+
 //set the default configuration attribute for store view scope
 $this->updateAttribute(
     'catalog_product',

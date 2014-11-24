@@ -115,3 +115,7 @@ foreach ($scopes as $scope) {
 }
 //cleanup
 $this->cleanupConfigTable();
+
+$table = $this->getTable('easylife_switcher/hashcode');
+//drop the hashcode table
+$this->run("DROP TABLE IF EXISTS `{$table}`");

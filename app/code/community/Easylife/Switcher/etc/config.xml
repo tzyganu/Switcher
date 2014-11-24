@@ -19,7 +19,7 @@
 <config>
     <modules>
         <Easylife_Switcher>
-            <version>2.0.1</version>
+            <version>2.0.2</version>
         </Easylife_Switcher>
     </modules>
     <global>
@@ -187,21 +187,21 @@
     <easylife_switcher>
         <system>
             <transform>
-                <none tranlsate="label" module="easylife_switcher">
+                <none translate="label" module="easylife_switcher">
                     <label>No transformation</label>
                 </none>
-                <labels tranlsate="label" module="easylife_switcher">
+                <labels translate="label" module="easylife_switcher">
                     <label>Labels</label>
                 </labels>
-                <product_images tranlsate="label" module="easylife_switcher">
+                <product_images translate="label" module="easylife_switcher">
                     <label>Simple product images</label>
                     <after_block>easylife_switcher/adminhtml_system_attribute_after_product_image</after_block>
                 </product_images>
-                <colors tranlsate="label" module="easylife_switcher">
+                <colors translate="label" module="easylife_switcher">
                     <label>Colors</label>
                     <after_block>easylife_switcher/adminhtml_system_attribute_after_color</after_block>
                 </colors>
-                <custom_images tranlsate="label" module="easylife_switcher">
+                <custom_images translate="label" module="easylife_switcher">
                     <label>Custom images</label>
                     <after_block>easylife_switcher/adminhtml_system_attribute_after_image</after_block>
                 </custom_images>
