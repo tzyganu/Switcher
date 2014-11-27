@@ -1,0 +1,49 @@
+"Allow out of stock products to be selected","Permitir seleccionar productos sin existencias"
+Attribute,Atributo
+"Autoselect first option if none specified","Autoseleccionar primera opción si no hay ninguna seleccionada"
+"Block type for media section. Leave empty to use default","Tipo bloque para la sección media. Dejar vacío para utilizar la opción por defecto"
+Cancel,Cancelar
+"Change images when these attributes are changed","Cambiar imagen cuando estos atributos cambien"
+"Change media content when these attributes are changed","Cambiar contenido media cuando estos atributos cambien"
+"Changing the configurable value of these attributes will trigger the main image to change, if available.","Cambiando el valor de los atributos hará que la imagen principal cambie, si está disponible."
+"Changing the configurable value of these attributes will trigger the media block to change.","Cambiando el valor de los atributos hará que el bloque media cambie."
+Colors,Colores
+"Configurable attributes transforms","Transformaciones de los atributos configurables"
+"Configure Colors","Configurar colores"
+"Configure Images","Configurar imágenes"
+"Custom images","Imágenes personalizadas"
+Default,Por defecto
+"Dom Media block selector","Selector DOM del bloque media"
+"Dom selector for main image","Selector DOM para imagen principal"
+"Easylife Switcher","Easylife Switcher"
+Enabled,Habilitado
+"Fill Options","Rellenar opciones"
+Images,Imágenes
+"JS callback to be executed after the main image is changed.","JS callback que se ejecutará al cambiar la imagen principal."
+"JS callback to be executed after the media block is changed.","JS callback que se ejecutará al cambiar el bloque ."
+"Keep previously selected values","Mantener valores seleccionados previamente"
+"Label / Options image size","Etiqueta / Opciones tamaño de imagen"
+Labels,Etiquetas
+"Main image size","Tamaño imagen principal"
+"No image switch","Sin cambio de imagen"
+"No transformation","Sin transformación"
+"Prototype expression that selects the main image element","Expresión Prototype que selecciona el elemento de la imagen principal"
+"Prototype expression that selects the media block container","Expresión Prototype que selecciona el contenedor del bloque media"
+"Recommended if you have 2 or more configurable attributes.","Recomendado si tiene 2 o más atributos en el configurable."
+Save,Guardar
+Settings,Configuración
+"Show added configurable prices in label","Mostrar precios configurables añadidos en la etiqueta"
+"Show out of stock configurations","Mostrar opciones fuera de existencia"
+"Simple product images","Imágenes producto simple"
+"Switch all media section","Cambiar toda la sección media"
+"Switch main image","Cambiar imagen principal"
+"Switch product images","Cambiar imágenes de producto"
+"Template for media block. Leave empty to use default.","Plantilla para el bloque de media. Dejar vacío para valor por defecto."
+"There was a problem uploading images","Hubo un problema subiendo imágenes"
+Transformation,Transformación
+"Transformation settings","Configuración de las transformaciones"
+"Use Configuration for default store view","Usar la configuración por defecto de la vista de tienda"
+"Use configurable product image if the simple one does not have images","Usar la imagen del configurable si las vistas simples no tienen"
+"Use this image attribute","Usar este atributo de imagen"
+"Use values like 100x80 or simply 100. Leave empty for no resize","Usar valores como 100x80 o solo 100. Dejarlo vacío para no reescalar"
+[none],[ninguno]
