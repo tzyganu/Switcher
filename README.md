@@ -10,4 +10,5 @@ For a full list of features with screenshots included check the [Features list] 
 
 Please visit the [wiki](https://github.com/tzyganu/Switcher/wiki) for a full description.
 
-Extension is compatible with CE versions 1.7 and after.
+Extension is compatible with CE versions 1.7 and after.  
+**Not tested yet for CE 1.9.1**
