@@ -416,19 +416,14 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
                 foreach ($simpleProducts as $product) {
                     /** @var Mage_Catalog_Model_Product $product */
                     if ($product->getIsSalable() || $this->getAllowNoStockSelect()) {
-                        $default = $product;
+                        //$default = $product;
+                        $defaultId = $product->getId();
                         break;
                     }
                 }
-            } else {
-                $default = false;
             }
-        } else {
-            $default = Mage::getModel('catalog/product')
-                ->setStoreId(Mage::app()->getStore()->getId())
-                ->load($defaultId);
         }
-        if (!$default || !$default->getId()) {
+        if (!$defaultId) {
             return null;
         }
         $defaultValues = array();
@@ -436,7 +431,12 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
             /** @var Mage_Catalog_Model_Product_Type_Configurable_Attribute $attribute */
             /** @var Mage_Catalog_Model_Resource_Eav_Attribute $productAttribute */
             $productAttribute = $attribute->getProductAttribute();
-            $defaultValues[$productAttribute->getId()] = $default->getData($productAttribute->getAttributeCode());
+            $defaultValues[$productAttribute->getId()] = Mage::getResourceModel('catalog/product')
+                ->getAttributeRawValue(
+                    $defaultId,
+                    $productAttribute->getAttributeCode(),
+                    Mage::app()->getStore()->getId()
+                );
         }
         return $defaultValues;
     }
