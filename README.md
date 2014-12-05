@@ -1,7 +1,7 @@
 Easylife Switcher
 ========
 
-Configurable products switcher v2.1.0
+Configurable products switcher v2.1.1
 
 This is a Magento extension that allows you to change the configurable products dropdowns to labels, colors or images.  
 It also allows you to set default configurations, keep the selected options when changing an option from above.  

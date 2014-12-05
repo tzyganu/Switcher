@@ -50,4 +50,5 @@
             <block type="easylife_switcher/adminhtml_system_dependency" name="easylife_switcher.dependency" as="easylife_switcher.dependency" after="" />
         </reference>
     </adminhtml_system_config_edit>
+
 </layout>

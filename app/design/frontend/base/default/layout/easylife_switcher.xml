@@ -35,6 +35,14 @@
             <action method="addCss" ifconfig="easylife_switcher/settings/enabled">
                 <css>css/easylife_switcher/styles.css</css>
             </action>
+            <action method="removeItem" ifconfig="easylife_switcher/settings/enabled">
+                <type>skin_js</type>
+                <name>js/configurableswatches/product-media.js</name>
+            </action>
+            <action method="removeItem" ifconfig="easylife_switcher/settings/enabled">
+                <type>skin_js</type>
+                <name>js/configurableswatches/swatches-product.js</name>
+            </action>
         </reference>
         <reference name="content">
             <block type="easylife_switcher/catalog_product_view_type_configurable_config" template="easylife_switcher/catalog/product/view/type/configurable/config.phtml" />

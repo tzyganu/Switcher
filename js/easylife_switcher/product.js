@@ -99,11 +99,12 @@ Easylife.Switcher = Class.create(Product.Config, {
                     return;
                 }
                 var optVal = $(elem).value;
+                var title =  $(elem).innerHTML;
                 var optText = that.getOptionText(elem, optVal, switchConfig);
                 var inStock = that.isInStock(attributeId, optVal);
                 var labelClass = that.getLabelClass(elem, attributeId, optVal, inStock);
 
-                $(newId).insert('<label class="switcher-label' + labelClass + '" id="' + $(selectid).id + '_' + optVal + '" value="' + optVal + '">'+optText+'</label></div>');
+                $(newId).insert('<label class="switcher-label' + labelClass + '" id="' + $(selectid).id + '_' + optVal + '" value="' + optVal + '" title="' + title + '">'+optText+'</label>');
                 //change the select value on click
                 that.bindClickEvent(selectid, optVal, inStock);
 

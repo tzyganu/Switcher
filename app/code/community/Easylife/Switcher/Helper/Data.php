@@ -50,4 +50,5 @@ class Easylife_Switcher_Helper_Data extends Mage_Core_Helper_Abstract
         $store = Mage::app()->getRequest()->getParam('store', 0);
         return Mage::getStoreConfigFlag(self::XML_ENABLED_PATH, $store);
     }
+
 }
