@@ -19,7 +19,7 @@
 <config>
     <modules>
         <Easylife_Switcher>
-            <version>2.1.1</version>
+            <version>2.2.0</version>
         </Easylife_Switcher>
     </modules>
     <global>
@@ -41,7 +41,7 @@
             <easylife_switcher_resource>
                 <class>Easylife_Switcher_Model_Resource</class>
                 <entities>
-                    <hashcode><!-- left here for backwards compatibility - not used since 2.0.0 -->
+                    <hashcode><!-- left here for backwards compatibility - @deprecated since 2.0.0 -->
                         <table>easylife_switcher_hascode</table>
                     </hashcode>
                 </entities>

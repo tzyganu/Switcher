@@ -269,6 +269,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
         $config['switch_media_callback']    = Mage::getStoreConfig(self::XML_MEDIA_CALLBACK_PATH);
         $config['allow_no_stock_select']    = $this->getAllowNoStockSelect();
         $config['keep_values']              = Mage::getStoreConfigFlag(self::XML_KEEP_SELECTED_VALUES);
+        $config['image_size']               = $this->_getImageDimensions(self::XML_OPTIONS_IMAGE_RESIZE);
 
         if (!$this->getProduct()->hasPreconfiguredValues()) {
             if ($this->getDefaultValues()) {
@@ -487,9 +488,19 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
                     if (!empty($dimensions)) {
                         $image->resize($dimensions[0], $dimensions[1]);
                     }
-                    $images[$id][$product->getId()] = (string)$image;
+                    $images[$id][$product->getId()]['src'] = (string)$image;
+                    $label = $product->getData('image_label');
+                    if (empty($label)) {
+                        $label = $product->getName();
+                    }
+                    $images[$id][$product->getId()]['alt'] = $this->escapeHtml($label);
                 } elseif (Mage::getStoreConfigFlag(self::XML_USE_CONF_IMAGE)) {
-                    $images[$id][$product->getId()] = (string)$this->getConfProductImage();
+                    $images[$id][$product->getId()] ['src']= (string)$this->getConfProductImage();
+                    $label = $this->getProduct()->getData('image_label');
+                    if (empty($label)) {
+                        $label = $this->getProduct()->getName();
+                    }
+                    $images[$id][$product->getId()]['alt'] = $this->escapeHtml($label);
                 }
             }
         }

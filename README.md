@@ -1,7 +1,16 @@
 Easylife Switcher
 ========
 
-Configurable products switcher v2.1.1
+Configurable products switcher v2.2.0
+
+Notice
+----------
+
+Most probably version 2.2.0 is going to be the last version of this module (unless someone finds a flagrant bug).  
+Magento already has a color swatch module included in the core starting with version 1.9.1 Use that one.
+
+What it does
+-------
 
 This is a Magento extension that allows you to change the configurable products dropdowns to labels, colors or images.  
 It also allows you to set default configurations, keep the selected options when changing an option from above.  

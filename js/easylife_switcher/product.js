@@ -104,7 +104,7 @@ Easylife.Switcher = Class.create(Product.Config, {
                 var inStock = that.isInStock(attributeId, optVal);
                 var labelClass = that.getLabelClass(elem, attributeId, optVal, inStock);
 
-                $(newId).insert('<label class="switcher-label' + labelClass + '" id="' + $(selectid).id + '_' + optVal + '" value="' + optVal + '" title="' + title + '">'+optText+'</label>');
+                $(newId).insert('<label class="switcher-label' + labelClass + '" id="' + $(selectid).id + '_' + optVal + '" value="' + optVal + '" title="' + title + '"' + that.getImageSizeHTML() + '>'+optText+'</label>');
                 //change the select value on click
                 that.bindClickEvent(selectid, optVal, inStock);
 
@@ -115,6 +115,13 @@ Easylife.Switcher = Class.create(Product.Config, {
             })
         }
         return transformed;
+    },
+    getImageSizeHTML: function() {
+        if (!this.config.image_size) {
+            return '';
+        }
+        var sizes = this.config.image_size;
+        return ' style="width:' + sizes[0] + 'px;height:' + sizes[1] + 'px;line-height:' + sizes[1] + 'px"';
     },
     /**
      * bind click event on labels
@@ -311,7 +318,9 @@ Easylife.Switcher = Class.create(Product.Config, {
         var image = eval(this.getConfigValue(this.config, 'main_image_selector', false));
         if (productImage && image) {
             //change the src
-            $(image).src = productImage;
+            $(image).src = productImage['src'];
+            $(image).alt = productImage['alt'];
+            $(image).title = productImage['alt'];
             //hack for default theme zoomer
             //don't call the callback on the first page load
             var callback = this.getConfigValue(this.config, 'switch_image_callback', false);
