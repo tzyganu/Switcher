@@ -387,7 +387,9 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
         $images = array();
         foreach ($imageAttributes as $imageAttribute) {
             foreach ($simpleProducts as $product) {
-                /** @var Mage_Catalog_Model_Product $product */
+                $product = Mage::getModel('catalog/product')
+					->setStoreId(Mage::app()->getStore()->getId())
+					->load($product->getId());
                 if ($product->getData($imageAttribute) != '' && $product->getData($imageAttribute) != 'no_selection') {
                     $image = $this->getCatalogImageHelper()->init($product, $imageAttribute);
                     $dimensions = $this->_getImageDimensions(self::XML_OPTIONS_IMAGE_RESIZE);
