@@ -364,6 +364,17 @@ Easylife.Switcher = Class.create(Product.Config, {
     configureElement: function($super, element){
         $super(element);
         var attributeId = $(element).id.replace(/[a-z]*/, '');
+        var reset = false;
+        if (!this.config.keep_values) {
+            for (var i in this.currentValues) {
+                if (i == attributeId) {
+                    reset = true;
+                }
+                if (reset) {
+                    delete this.currentValues[i];
+                }
+            }
+        }
         this.currentValues[attributeId] = $(element).value;
         this.keepSelection(element);
         var value = $(element).value;
@@ -373,19 +384,45 @@ Easylife.Switcher = Class.create(Product.Config, {
         if (switchType == 0) {
             return ;
         }
-        var options = this.getConfigValue(this.config, 'attributes/' + attributeId + '/options', []);
-        for (var id in options){
-            if (options.hasOwnProperty(id) && options[id].id == value){
-                var product = options[id].allowedProducts[0];
-                if (switchType == 1) {
-                    this.changeMainImage(attributeId, product);
-                }
-                else if(switchType == 2) {
-                    //var product = this.getConfigValue(this.config, 'switch_media/' + attributeId + '/' + product)
-                    this.changeMediaBlock(attributeId, product);
+        //get last options of the current values
+        var lastOption = -1;
+        for (var index in this.currentValues) {
+            lastOption = index;
+        }
+        if (lastOption == attributeId) {
+            var options = this.getConfigValue(this.config, 'attributes/' + attributeId + '/options', []);
+            var allowed = [];
+            var setAllowed = false;
+            var first = [];
+            for (var id in options){
+                if (options.hasOwnProperty(id) && options[id].id == value){
+                    var products =  options[id].allowedProducts;
+                    if (!setAllowed) {
+                        allowed = products;
+                        first = allowed;
+                    } else {
+                        var newProducts = [];
+                        for (var i in products) {
+                            if (allowed.indexOf(products[i]) != -1) {
+                                newProducts.push(products[i]);
+                            }
+                        }
+                        allowed = newProducts;
+                    }
                 }
             }
+            if (allowed.length == 0) {
+                allowed = first;
+            }
+            var product = allowed[0];
+            if (switchType == 1) {
+                this.changeMainImage(attributeId, product);
+            }
+            else if(switchType == 2) {
+                this.changeMediaBlock(attributeId, product);
+            }
         }
+
     },
     /**
      * rewrite configureForValues to avoid calling the switch callback on first load

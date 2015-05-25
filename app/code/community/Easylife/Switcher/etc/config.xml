@@ -19,7 +19,7 @@
 <config>
     <modules>
         <Easylife_Switcher>
-            <version>2.2.0</version>
+            <version>2.3.0</version>
         </Easylife_Switcher>
     </modules>
     <global>
@@ -83,6 +83,17 @@
                 </Easylife_Switcher>
             </modules>
         </translate>
+        <product><!-- for 1.9 compatibility. The simple product attributes are not loaded by default anymore. https://github.com/tzyganu/Switcher/issues/109#issuecomment-105227387 -->
+            <configurable><!-- any other image attribute that you want to use should be added here -->
+                <child>
+                    <attributes>
+                        <image />
+                        <small_image />
+                        <thumbnail />
+                    </attributes>
+                </child>
+            </configurable>
+        </product>
     </frontend>
     <adminhtml>
         <layout>

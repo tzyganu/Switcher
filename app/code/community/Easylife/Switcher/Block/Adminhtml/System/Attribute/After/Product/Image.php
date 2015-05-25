@@ -70,9 +70,15 @@ class Easylife_Switcher_Block_Adminhtml_System_Attribute_After_Product_Image ext
     public function getOptionsArray()
     {
         if (is_null($this->_options)) {
+            /** @var Mage_Catalog_Model_Resource_Product_Attribute_Collection $collection */
             $collection = Mage::getResourceModel('catalog/product_attribute_collection')
                 ->addVisibleFilter()
                 ->addFieldToFilter('frontend_input', 'media_image');
+            //the way the attributes are retrieved in 1.9 changed
+            if (defined('Mage_Catalog_Model_Product_Type_Configurable::XML_PATH_PRODUCT_CONFIGURABLE_CHILD_ATTRIBUTES')) {
+                $attributes = Mage::getConfig()->getNode(Mage_Catalog_Model_Product_Type_Configurable::XML_PATH_PRODUCT_CONFIGURABLE_CHILD_ATTRIBUTES);
+                $collection->addFieldToFilter('attribute_code', array_keys((array)$attributes));
+            }
             foreach ($collection as $attribute) {
                 /** @var Mage_Catalog_Model_Resource_Eav_Attribute $attribute */
                 $this->_options[$attribute->getAttributeCode()] = $attribute->getFrontendLabel();
