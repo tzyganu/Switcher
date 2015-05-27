@@ -417,7 +417,6 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
                 foreach ($simpleProducts as $product) {
                     /** @var Mage_Catalog_Model_Product $product */
                     if ($product->getIsSalable() || $this->getAllowNoStockSelect()) {
-                        //$default = $product;
                         $defaultId = $product->getId();
                         break;
                     }
@@ -480,28 +479,26 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
         $changeAttributes = $this->getSwitchAttributes(self::XML_CHANGE_IMAGE_PATH);
         $simpleProducts = $this->getCachedAllowedProducts();
         $images = array();
-        foreach ($changeAttributes as $id=>$code) {
-            foreach ($simpleProducts as $product) {
-                if ($product->getData('image') != '' && $product->getData('image') != 'no_selection') {
-                    $image = Mage::helper('catalog/image')->init($product, 'image');
-                    $dimensions = $this->_getImageDimensions();
-                    if (!empty($dimensions)) {
-                        $image->resize($dimensions[0], $dimensions[1]);
-                    }
-                    $images[$id][$product->getId()]['src'] = (string)$image;
-                    $label = $product->getData('image_label');
-                    if (empty($label)) {
-                        $label = $product->getName();
-                    }
-                    $images[$id][$product->getId()]['alt'] = $this->escapeHtml($label);
-                } elseif (Mage::getStoreConfigFlag(self::XML_USE_CONF_IMAGE)) {
-                    $images[$id][$product->getId()] ['src']= (string)$this->getConfProductImage();
-                    $label = $this->getProduct()->getData('image_label');
-                    if (empty($label)) {
-                        $label = $this->getProduct()->getName();
-                    }
-                    $images[$id][$product->getId()]['alt'] = $this->escapeHtml($label);
+        foreach ($simpleProducts as $product) {
+            if ($product->getData('image') != '' && $product->getData('image') != 'no_selection') {
+                $image = Mage::helper('catalog/image')->init($product, 'image');
+                $dimensions = $this->_getImageDimensions();
+                if (!empty($dimensions)) {
+                    $image->resize($dimensions[0], $dimensions[1]);
                 }
+                $images[$product->getId()]['src'] = (string)$image;
+                $label = $product->getData('image_label');
+                if (empty($label)) {
+                    $label = $product->getName();
+                }
+                $images[$product->getId()]['alt'] = $this->escapeHtml($label);
+            } elseif (Mage::getStoreConfigFlag(self::XML_USE_CONF_IMAGE)) {
+                $images[$product->getId()] ['src']= (string)$this->getConfProductImage();
+                $label = $this->getProduct()->getData('image_label');
+                if (empty($label)) {
+                    $label = $this->getProduct()->getName();
+                }
+                $images[$product->getId()]['alt'] = $this->escapeHtml($label);
             }
         }
         return $images;
@@ -517,23 +514,28 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
             Easylife_Switcher_Model_Adminhtml_System_Config_Source_Switch::SWITCH_MEDIA) {
             return array();
         }
-        $changeAttributes = $this->getSwitchAttributes(self::XML_CHANGE_MEDIA_PATH);
         $simpleProducts = $this->getCachedAllowedProducts();
         $images = array();
+        $configurableMedia = null;
         $block = Mage::app()->getLayout()
             ->createBlock($this->_getMediaBlockType())
             ->setTemplate($this->_getMediaBlockTemplate());
-        foreach ($changeAttributes as $id=>$code) {
-            foreach ($simpleProducts as $product) {
-                /** @var Mage_Catalog_Model_Product $product */
-                $product = Mage::getModel('catalog/product')
-                    ->setStoreId(Mage::app()->getStore()->getId())
-                    ->load($product->getId());
-                if ($product->getData('image') != '' && $product->getData('image') != 'no_selection') {
-                    $block->setProduct($product);
-                    $images[$id][$product->getId()] = $block->toHtml();
+        foreach ($simpleProducts as $product) {
+            /** @var Mage_Catalog_Model_Product $product */
+            $product = Mage::getModel('catalog/product')
+                ->setStoreId(Mage::app()->getStore()->getId())
+                ->load($product->getId());
+            if ($product->getData('image') != '' && $product->getData('image') != 'no_selection') {
+                $block->setProduct($product);
+                $images[$product->getId()] = $block->toHtml();
+            } else {
+                if (is_null($configurableMedia)) {
+                    $block->setProduct($this->getProduct());
+                    $configurableMedia = $block->toHtml();
                 }
+                $images[$product->getId()] = $configurableMedia;
             }
+
         }
         return $images;
     }
