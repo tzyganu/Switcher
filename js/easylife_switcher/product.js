@@ -383,22 +383,20 @@ Easylife.Switcher = Class.create(Product.Config, {
         if (switchType == 0) {
             return ;
         }
-        //get last options of the current values
-        var lastOption = -1;
-        for (var index in this.currentValues) {
-            lastOption = index;
-        }
-        if (lastOption == attributeId) {
-            var options = this.getConfigValue(this.config, 'attributes/' + attributeId + '/options', []);
-            var allowed = [];
-            var setAllowed = false;
-            var first = [];
+        var setAllowed = false;
+        var first = [];
+        var allowed = [];
+        for (var key in this.currentValues)
+        {
+            var options = this.getConfigValue(this.config, 'attributes/' + key + '/options', []);
+
             for (var id in options){
-                if (options.hasOwnProperty(id) && options[id].id == value){
+                if (options.hasOwnProperty(id) && options[id].id == this.currentValues[key]){
                     var products =  options[id].allowedProducts;
                     if (!setAllowed) {
                         allowed = products;
                         first = allowed;
+                        setAllowed = true;
                     } else {
                         var newProducts = [];
                         for (var i in products) {
@@ -410,18 +408,14 @@ Easylife.Switcher = Class.create(Product.Config, {
                     }
                 }
             }
-            if (allowed.length == 0) {
-                allowed = first;
-            }
-            var product = allowed[0];
-            if (switchType == 1) {
-                this.changeMainImage(product);
-            }
-            else if(switchType == 2) {
-                this.changeMediaBlock(product);
-            }
         }
-
+        var product = allowed[0];
+        if (switchType == 1) {
+            this.changeMainImage(product);
+        }
+        else if(switchType == 2) {
+            this.changeMediaBlock(product);
+        }
     },
     /**
      * rewrite configureForValues to avoid calling the switch callback on first load

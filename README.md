@@ -1,7 +1,7 @@
 Easylife Switcher
 ========
 
-Configurable products switcher v2.3.1
+Configurable products switcher v2.3.2
 
 Notice
 ----------
