@@ -7,8 +7,8 @@ Notice
 ----------
 
 <strike>Most probably version 2.2.0 is going to be the last version of this module (unless someone finds a flagrant bug).</strike>  
-Well...I was wrong. Here is version 2.3.1. Someone found a flagrant bug.    
-Here it goes again: **Most probably version 2.3.1 is going to be the last version of this module (unless someone finds a flagrant bug).**  
+Well...I was wrong. Here is version 2.3.2. Someone found a flagrant bug.    
+Here it goes again: **Most probably version 2.3.2 is going to be the last version of this module (unless someone finds a flagrant bug).**  
 Magento already has a color swatch module included in the core starting with version 1.9.1 Use that one.
 
 What it does
