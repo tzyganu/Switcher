@@ -314,9 +314,10 @@ Easylife.Switcher = Class.create(Product.Config, {
         //recalculate current values
         this.currentValues = {};
         for (var i=0; i<this.settings.length;i++){
-            if ($(this.settings[i]).value) {
+            var optionValue = $(this.settings[i]).value;
+            if (optionValue && this.getConfigValue(this.config, 'chooseText', '') != optionValue) {
                 var id = $(this.settings[i]).id.replace(/[a-z]*/, '');
-                this.currentValues[id] = $(this.settings[i]).value;
+                this.currentValues[id] = optionValue;
             }
         }
     },
