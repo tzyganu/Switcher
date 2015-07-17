@@ -300,6 +300,7 @@ Easylife.Switcher = Class.create(Product.Config, {
                 $(element.nextSetting).value = this.currentValues[nextSettingId];
                 if (!$(element.nextSetting).value) {
                     delete this.currentValues[nextSettingId];
+                    $(element.nextSetting).selectedIndex = 0; // value not set selected index ist probadly also wrong
                 }
                 var label = $('attribute' + nextSettingId + '_' + this.currentValues[nextSettingId]);
                 if (label) {
@@ -373,6 +374,9 @@ Easylife.Switcher = Class.create(Product.Config, {
      * @param element
      */
     configureElement: function($super, element){
+        if (element.selectedIndex < 0) {
+            element.selectedIndex = 0; // element.selectedIndex = -1 breaks everything
+        }
         $super(element);
         var attributeId = $(element).id.replace(/[a-z]*/, '');
         var reset = false;
