@@ -3,13 +3,16 @@ Easylife Switcher
 
 Configurable products switcher v2.3.2
 
-Notice
+Discontinued
 ----------
+This extension is no longer supported by the developer (that's me).  
+There will be no more upgrades, no more support, no more bugfixes.  
+The reasons:
+ - lack of time  
+ - magento already offers a color swatch module in the core.  
+I left it here just for posterity.  
+Feel free to fork it, change it, call it yours, sell it, trade it for a sandwich.  
 
-<strike>Most probably version 2.2.0 is going to be the last version of this module (unless someone finds a flagrant bug).</strike>  
-Well...I was wrong. Here is version 2.3.2. Someone found a flagrant bug.    
-Here it goes again: **Most probably version 2.3.2 is going to be the last version of this module (unless someone finds a flagrant bug).**  
-Magento already has a color swatch module included in the core starting with version 1.9.1 Use that one.
 
 What it does
 -------
