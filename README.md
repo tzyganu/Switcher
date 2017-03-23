@@ -10,6 +10,7 @@ There will be no more upgrades, no more support, no more bugfixes.
 The reasons:
  - lack of time  
  - magento already offers a color swatch module in the core.  
+ 
 I left it here just for posterity.  
 Feel free to fork it, change it, call it yours, sell it, trade it for a sandwich.  
 
