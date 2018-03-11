@@ -377,6 +377,15 @@ Easylife.Switcher = Class.create(Product.Config, {
         var reset = false;
         this.keepSelection(element);
         var value = $(element).value;
+
+        //if the selected attribute does not match the one of the change_media_attributes config
+        //stop it here
+        var changeMediaAttr = this.getConfigValue(this.config, 'change_media_attributes', false);
+        var currCodeAttr = this.config.attributes[attributeId].code;
+        if (currCodeAttr.indexOf(changeMediaAttr.split(',')) == -1) {
+            return ;
+        }
+
         //var options = this.config.attributes[attributeId].options;
         //if we should not switch anything stop it here
         var switchType = this.getConfigValue(this.config, 'switch_image_type', 0);
