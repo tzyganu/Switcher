@@ -265,6 +265,7 @@ class Easylife_Switcher_Block_Catalog_Product_View_Type_Configurable_Config exte
 
         $config['switch_images']            = $this->getSwitchImages();
         $config['switch_media']             = $this->getSwitchMedia();
+        $config['change_media_attributes']  = Mage::getStoreConfig(self::XML_CHANGE_MEDIA_PATH);
         $config['switch_media_selector']    = Mage::getStoreConfig(self::XML_MEDIA_SELECTOR);
         $config['switch_media_callback']    = Mage::getStoreConfig(self::XML_MEDIA_CALLBACK_PATH);
         $config['allow_no_stock_select']    = $this->getAllowNoStockSelect();
